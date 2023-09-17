@@ -20,16 +20,16 @@ import Duration from "./components/Duration";
 import GuidedMeditationOptionalScreen from "./components/GuidedMeditationOptionalScreen";
 
 const emotions = [
-  "Happy",
-  "Sad",
-  "Angry",
-  "Confident",
-  "Worried",
-  "Relaxed",
   "Stressed",
-  "Excited",
-  "Bored",
-  "Indifferent",
+  "Anxious",
+  "Tired",
+  "Confident",
+  "Conflicted",
+  "Overwhelmed",
+  "Relaxed",
+  "Inspired",
+  "Restless",
+  "Hopeful",
 ];
 
 function GuidedMeditationScreen({ navigation }) {

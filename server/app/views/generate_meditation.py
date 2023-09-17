@@ -20,12 +20,12 @@ class GenerateMeditationView(APIView):
     def generate_meditations(self, data):
         if not data:
             data = {
-                "duration": 1,
+                "duration": 60,
                 "context": "I have a big presentation coming up and I'm feeling nervous.",
             }
-        prompt = f"Generate a unique personalized guided meditation in no more than {str(data['duration']*6)} sentences, please.\n\n"
+        prompt = f"Generate a unique personalized guided meditation in no more than {data['duration']//8} sentences, please.\n\n"
         if data.get("duration"):
-            prompt += "Duration: " + str(data["duration"]) + " minutes" + "\n"
+            prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
         if data.get("technique"):
             prompt += "Meditation Technique: " + data.get("technique") + "\n"
         if data.get("context"):

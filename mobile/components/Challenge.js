@@ -7,17 +7,32 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import Checkbox from "expo-checkbox";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
+import { updateChallenge } from "../api/challenges";
 
-const Challenge = ({ title, description, buttonText, color }) => {
+const Challenge = ({ title, description, buttonText, color, isChecked }) => {
+  const [checked, setChecked] = React.useState(isChecked);
+  const onCheck = () => {
+    updateChallenge(title, !checked);
+    setChecked(!checked);
+  };
   return (
-    <View style={{ ...styles.card, backgroundColor: color }}>
-      <Text style={styles.cardTitle}>{title}</Text>
+    <View style={{ ...styles.card, borderWidth: 1.5 }}>
+      <View borderStyle="solid">
+        <Text>
+          <Text style={{ ...styles.cardTitle }}>{title}</Text>
+          <View>
+            <Checkbox
+              style={styles.checkbox}
+              value={checked}
+              onValueChange={onCheck}
+            />
+          </View>
+        </Text>
+      </View>
       <Text style={styles.cardDescription}>{description}</Text>
-      <TouchableOpacity style={{ ...styles.cardButton }}>
-        <Text style={styles.buttonText}>{buttonText}</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -31,17 +46,23 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#2A0060",
   },
+  checkbox: {
+    marginLeft: "auto",
+  },
   card: {
     // borderWidth: 1,
-    // borderColor: "lightgray",
+    borderColor: "white",
+    backgroundColor: "#2A0060",
+    border: "1.5px solid white",
     borderRadius: 20,
     padding: 15,
     marginBottom: 15,
-    alignItems: "center",
+    // alignItems: "center",
   },
   cardTitle: {
-    fontSize: 24,
-    fontWeight: "500",
+    fontSize: 16,
+    marginLeft: 0,
+    fontWeight: "700",
     marginBottom: 10,
     color: "white",
   },

@@ -123,8 +123,9 @@ function ChallengesScreen() {
         renderItem={({ item }) => (
           <Challenge
             title={item.title}
-            description={item.description}
+            description={item.content}
             buttonText="View"
+            checked={item.completed}
             color="#1DAABD"
             buttonColor="rgba(29, 0, 65, 0.49)"
           />
