@@ -62,8 +62,13 @@ function HomeScreen() {
       />
       <Card
         title="Weekly Challenges"
-        description={`Self-Compassion Practice\n\nWrite a letter of self-compassion to yourself, acknowledging your strengths and forgiving your imperfections.`}
-        buttonText="View All"
+        description={
+          <>
+            <Text style={{ textDecorationLine: 'underline' }}>Self-Compassion Practice</Text>
+            <Text>{`\n\nWrite a letter of self-compassion to yourself, acknowledging your strengths and forgiving your imperfections.`}</Text>
+          </>
+        }
+        buttonText="View"
         color="#1DAABD"
         buttonColor="rgba(29, 0, 65, 0.49)"
         onPress={() => navigation.navigate("Challenges")}
