@@ -64,19 +64,10 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
 
       <TouchableOpacity
         onPress={() => {
-          if (technique === "") {
-            // make border of input red
-            setInputStyle({
-              ...styles.textInput,
-              borderColor: "red",
-              borderWidth: 3,
-            });
-          } else {
-            navigation.navigate("Duration", {
-              emotion: selectedEmotion,
-              technique: technique,
-            });
-          }
+          navigation.navigate("Duration", {
+            emotion: selectedEmotion,
+            technique: technique,
+          });
         }}
         style={styles.buttonContainer}
       >

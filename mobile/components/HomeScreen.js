@@ -79,6 +79,7 @@ function HomeScreen() {
       <Card
         title="Journal"
         color="#FF8A00"
+        description={"Coming soon..."}
         buttonText="New Entry"
         buttonColor="rgba(29, 0, 65, 0.49)"
       />
@@ -156,7 +157,11 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#2A0060" }}>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { height: 60 },
+        }}
+      >
         <Tab.Screen
           name="Home"
           component={HomeScreen}
