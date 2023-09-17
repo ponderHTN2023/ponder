@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
   checkbox: {
     flexDirection: "row",
     alignItems: "end",
+    padding: 10,
+    borderRadius: 15,
   },
   card: {
     // borderWidth: 1,
