@@ -32,7 +32,7 @@ const Duration = ({ route, navigation }) => {
         <Text style={styles.minText}>min</Text>
       </View>
       <TouchableOpacity
-          onPress={() => navigation.navigate('MeditationTimer')}
+          onPress={handleNextPress}
           style={styles.buttonContainer}
         >
           <Text style={styles.buttonText}>Begin Session</Text>
