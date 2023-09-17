@@ -6,14 +6,17 @@ export const getChallenges = async () => {
   return { status: response.status, data };
 };
 
-export const updateChallenge = async (id, data) => {
+export const updateChallenge = async (data) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URLL}/api/challenges/${id}`,
+    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/challenges/${data["id"]}`,
     {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ completed: data["completed"] }),
     }
   );
-  return response.status === 200;
+  return response;
 };

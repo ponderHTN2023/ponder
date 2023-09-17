@@ -12,28 +12,42 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { updateChallenge } from "../api/challenges";
 
-const Challenge = ({ title, description, buttonText, color, isChecked }) => {
+const Challenge = ({
+  id,
+  title,
+  description,
+  buttonText,
+  color,
+  isChecked,
+}) => {
   const [checked, setChecked] = React.useState(isChecked);
-  const onCheck = () => {
-    updateChallenge(title, !checked);
+  const onCheck = async () => {
+    await updateChallenge({ id: id, completed: !checked });
     setChecked(!checked);
   };
   return (
-    <View style={{ ...styles.card, borderWidth: 1.5 }}>
-      <View borderStyle="solid">
-        <Text>
+    <TouchableOpacity onPress={onCheck}>
+      <View style={{ ...styles.card, borderWidth: 1.5 }}>
+        <View borderStyle="solid" style={{ flexDirection: "row" }}>
           <Text style={{ ...styles.cardTitle }}>{title}</Text>
-          <View>
-            <Checkbox
-              style={styles.checkbox}
-              value={checked}
-              onValueChange={onCheck}
-            />
-          </View>
-        </Text>
+          <Checkbox
+            style={styles.checkbox}
+            value={checked}
+            onValueChange={onCheck}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 5,
+            width: "100%",
+            borderTopWidth: 1,
+            borderTopColor: "white",
+          }}
+        >
+          <Text style={styles.cardDescription}>{description}</Text>
+        </View>
       </View>
-      <Text style={styles.cardDescription}>{description}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -47,7 +61,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#2A0060",
   },
   checkbox: {
-    marginLeft: "auto",
+    flexDirection: "row",
+    alignItems: "end",
   },
   card: {
     // borderWidth: 1,
@@ -61,6 +76,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
+    width: "90%",
     marginLeft: 0,
     fontWeight: "700",
     marginBottom: 10,
@@ -68,7 +84,8 @@ const styles = StyleSheet.create({
   },
   cardDescription: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 5,
+    marginTop: 10,
     color: "white",
   },
   cardButton: {

@@ -27,12 +27,6 @@ class ChallengeView(APIView):
         res = challenges.values()
         return Response(res)
 
-    def put(self, request, format=None):
-        challenge = Challenge.objects.get(id=request.data["id"])
-        challenge.completed = request.data["completed"]
-        challenge.save()
-        return Response({"message": "success"})
-
     def generate_challenges(self):
         prompt = "Generate 7 unique mindfulness and kindfulness challenges that inspire a healthy relationship with oneself and others, and promote presence in life. Please generate these challenges as a raw JSON object with the each key being the challenge title and the value being the challenge description. Example: {'Mindfulness Walk': 'example text'}. Thank you!"
         headers = {

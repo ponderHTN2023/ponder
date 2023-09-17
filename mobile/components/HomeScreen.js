@@ -64,11 +64,13 @@ function HomeScreen() {
         title="Weekly Challenges"
         description={
           <>
-            <Text style={{ textDecorationLine: 'underline' }}>Self-Compassion Practice</Text>
+            <Text style={{ textDecorationLine: "underline" }}>
+              Self-Compassion Practice
+            </Text>
             <Text>{`\n\nWrite a letter of self-compassion to yourself, acknowledging your strengths and forgiving your imperfections.`}</Text>
           </>
         }
-        buttonText="View"
+        buttonText="View All"
         color="#1DAABD"
         buttonColor="rgba(29, 0, 65, 0.49)"
         onPress={() => navigation.navigate("Challenges")}
@@ -118,10 +120,23 @@ function ChallengesScreen() {
   }
   return (
     <View style={styles.page}>
+      <Text
+        style={{
+          color: "white",
+          fontSize: 24,
+          display: "flex",
+          marginBottom: 32,
+          fontWeight: "500",
+          textAlign: "center",
+        }}
+      >
+        Weekly Challenges
+      </Text>
       <FlatList
         data={challenges}
         renderItem={({ item }) => (
           <Challenge
+            id={item.id}
             title={item.title}
             description={item.content}
             buttonText="View"

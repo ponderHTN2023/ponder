@@ -17,11 +17,11 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.urls import path
 from rest_framework import routers
-from app.views import GenerateMeditationView, ChallengeView
+from app.views import GenerateMeditationView, ChallengeView, UpdateChallengeView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/meditation", GenerateMeditationView.as_view(), name="generate"),
     path("api/challenges/", ChallengeView.as_view(), name="challenges"),
-    path("api/challenges/<int:id>", ChallengeView.as_view(), name="update_challenge"),
+    path("api/challenges/<int:id>", UpdateChallengeView.as_view(), name="update_challenge"),
 ]
