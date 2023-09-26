@@ -26,20 +26,20 @@ const MeditationTimer = ({ route, navigation }) => {
 
   const generateMeditation = async () => {
     setLoading(true);
-    await createMeditation({
+    const response = await createMeditation({
       duration: DURATION,
       emotion: emotion,
       goal: goal,
     });
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setLoading(false);
+    return response;
   };
 
   useEffect(() => {
-    async function setupAudio() {
-      console.log("Loading audio...");
-      //   await generateMeditation();
-      console.log("Audio created");
+    const setupAudio = async () => {
       try {
+        await generateMeditation();
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           staysActiveInBackground: true,
@@ -48,16 +48,14 @@ const MeditationTimer = ({ route, navigation }) => {
 
         const soundInstance = new Audio.Sound();
         const soundAsset = Asset.fromModule(
-          //   require("../assets/meditation.mp3")
-          require("../assets/generated.wav")
+          require("../assets/meditation.mp3")
         );
-        console.log("soundAsset:", soundAsset);
         await soundInstance.loadAsync(soundAsset);
         setSound(soundInstance);
       } catch (error) {
         console.error("Error setting up audio:", error);
       }
-    }
+    };
     setupAudio();
   }, []);
 

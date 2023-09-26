@@ -38,7 +38,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
         Which meditation technique{"\n"}would you like to try?
       </Text>
       <TextInput
-        placeholder="Custom..."
+        placeholder="Please select one (Optional)"
         style={inputStyle}
         value={technique}
         onChangeText={(text) => {
