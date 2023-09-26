@@ -31,7 +31,7 @@ const MeditationTimer = ({ route, navigation }) => {
       emotion: emotion,
       goal: goal,
     });
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoading(false);
     return response;
   };
@@ -56,7 +56,9 @@ const MeditationTimer = ({ route, navigation }) => {
         console.error("Error setting up audio:", error);
       }
     };
-    setupAudio();
+    if (!sound) {
+      setupAudio();
+    }
   }, []);
 
   async function playSound() {

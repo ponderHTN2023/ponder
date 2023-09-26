@@ -23,14 +23,14 @@ class GenerateMeditationView(APIView):
                 "duration": 60,
                 "context": "I have a big presentation coming up and I'm feeling nervous.",
             }
-        prompt = f"Generate a unique personalized guided meditation in no more than {data['duration']//8} sentences, please.\n\n"
+        prompt = f"Generate a unique personalized guided meditation in {data['duration']//9} sentences, please.\n\n"
         if data.get("duration"):
             prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
         if data.get("technique"):
             prompt += "Meditation Technique: " + data.get("technique") + "\n"
         if data.get("context"):
-            prompt += "Situation: " + data.get("context") + "\n"
-        prompt += f"\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {', technique, and duration' if data.get('technique') else 'and duration' }. Make it as personalized as possible. Thank you!"
+            prompt += "Emotion: " + data.get("emotion") + "\n"
+        prompt += f"\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {', technique, and duration' if data.get('technique') else 'and duration' }. Make it as personalized as possible. Each sentence of the meditation text should be followed by a new line character. Thank you!"
 
         print("sending request...")
         print("prompt:", prompt, "\n\n")
@@ -60,7 +60,7 @@ class GenerateMeditationView(APIView):
 
     def google_cloud_tts(self, meditation):
         print("meditation result:", meditation)
-        meditation = meditation.split("\n\n")
+        meditation = meditation.split("\n")
         text = "<speak>"
         for i in range(len(meditation)):
             if meditation[i]:
