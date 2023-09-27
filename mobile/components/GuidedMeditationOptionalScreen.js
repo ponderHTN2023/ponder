@@ -9,16 +9,16 @@ import {
 
 function GuidedMeditationOptionalScreen({ route, navigation }) {
   const techniques = [
-    "Stress Reduction",
     "Relaxation",
     "Anxiety Relief",
-    "Inspiration",
     "Self Compassion",
     "Self Reflection",
     "Gratitude",
-    "Spiritual Growth",
+    "Loving-Kindness",
     "Mental Clarity",
     "Empowerment",
+    "Visualization",
+    "Mindful Walking",
   ];
   const { selectedEmotion } = route.params;
   const [technique, setTechnique] = useState("");
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: "white",
     color: "white",
-    marginBottom: 10,
+    marginBottom: 16,
     width: "48%",
   },
 });

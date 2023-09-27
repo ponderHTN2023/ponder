@@ -15,7 +15,6 @@ import Onboarding2 from "./components/Onboarding2";
 import Onboarding3 from "./components/Onboarding3";
 import Onboarding4 from "./components/Onboarding4";
 import HomeScreen from "./components/HomeScreen";
-import PonderQuestionPage from "./components/PonderQuestionPage";
 import Duration from "./components/Duration";
 import GuidedMeditationOptionalScreen from "./components/GuidedMeditationOptionalScreen";
 
@@ -168,11 +167,6 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="PonderQuestion"
-          component={PonderQuestionPage}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name="Duration"
           component={Duration}
           options={{ headerShown: false }}
@@ -243,7 +237,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: "white",
     color: "white",
-    marginBottom: 10,
+    marginBottom: 16,
     width: "48%",
   },
 });

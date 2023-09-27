@@ -30,7 +30,7 @@ class GenerateMeditationView(APIView):
             prompt += "Meditation Technique: " + data.get("technique") + "\n"
         if data.get("context"):
             prompt += "Emotion: " + data.get("emotion") + "\n"
-        prompt += f"\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {', technique, and duration' if data.get('technique') else 'and duration' }. Make it as personalized as possible. Each sentence of the meditation text should be followed by a new line character. Thank you!"
+        prompt += f"\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {', technique, and duration' if data.get('technique') else 'and duration' }. Make it as personalized as possible. Each sentence of the meditation text should be followed by a period and then new line character. Thank you!"
 
         print("sending request...")
         print("prompt:", prompt, "\n\n")
