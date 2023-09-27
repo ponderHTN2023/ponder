@@ -15,8 +15,9 @@ import { createMeditation } from "../api/meditation";
 
 const MeditationTimer = ({ route, navigation }) => {
   const DURATION = route.params?.duration * 60 || 60;
-  const emotion = route.params?.selectedEmotion || "Happy";
-  const goal = route.params?.goal || "I want to be happy";
+  const emotion = route.params?.emotion;
+  const technique = route.params?.technique;
+  console.log("params:", route.params);
   const [loading, setLoading] = useState(false);
 
   const [isActive, setIsActive] = useState(false);
@@ -29,7 +30,7 @@ const MeditationTimer = ({ route, navigation }) => {
     const response = await createMeditation({
       duration: DURATION,
       emotion: emotion,
-      goal: goal,
+      technique: technique,
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoading(false);

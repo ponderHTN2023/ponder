@@ -20,7 +20,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
     "Visualization",
     "Mindful Walking",
   ];
-  const { selectedEmotion } = route.params;
+  const { emotion } = route.params;
   const [technique, setTechnique] = useState("");
   const [inputStyle, setInputStyle] = useState(styles.textInput);
 
@@ -64,8 +64,9 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
 
       <TouchableOpacity
         onPress={() => {
+          console.log(emotion, technique);
           navigation.navigate("Duration", {
-            emotion: selectedEmotion,
+            emotion: emotion,
             technique: technique,
           });
         }}

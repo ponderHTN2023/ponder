@@ -4,19 +4,20 @@ import { Picker } from "@react-native-picker/picker";
 
 const Duration = ({ route, navigation }) => {
   const [selectedDuration, setSelectedDuration] = useState(1);
-  const { selectedEmotion, goal } = route.params;
+  const { emotion, technique } = route.params;
+  console.log("emotion:", emotion);
 
   const handleNextPress = () => {
     navigation.navigate("MeditationTimer", {
       duration: selectedDuration,
-      selectedEmotion,
-      goal,
+      emotion,
+      technique,
     });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: 'white' }]}>Session Duration</Text>
+      <Text style={[styles.title, { color: "white" }]}>Session Duration</Text>
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedDuration}
@@ -32,11 +33,11 @@ const Duration = ({ route, navigation }) => {
         <Text style={styles.minText}>min</Text>
       </View>
       <TouchableOpacity
-          onPress={handleNextPress}
-          style={styles.buttonContainer}
-        >
-          <Text style={styles.buttonText}>Begin Session</Text>
-        </TouchableOpacity>
+        onPress={handleNextPress}
+        style={styles.buttonContainer}
+      >
+        <Text style={styles.buttonText}>Begin Session</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -66,25 +67,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#2A0060",
   },
   buttonContainer: {
-    backgroundColor: '#7000E0',
+    backgroundColor: "#7000E0",
     borderRadius: 14,
     paddingVertical: 15,
     paddingHorizontal: "20%",
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
     marginBottom: 20,
   },
 });
-
 
 export default Duration;

@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import MeditationTimer from "./components/MeditationTimer";
+import MeditationTimer from "./screens/MeditationTimer";
 import Onboarding from "./screens/Onboarding";
 import Onboarding2 from "./screens/Onboarding2";
 import Onboarding3 from "./screens/Onboarding3";
 import Onboarding4 from "./screens/Onboarding4";
 import HomeScreen from "./components/HomeScreen";
-import Duration from "./components/Duration";
-import GuidedMeditationOptionalScreen from "./components/GuidedMeditationOptionalScreen";
+import Duration from "./screens/Duration";
+import GuidedMeditationOptionalScreen from "./screens/GuidedMeditationOptionalScreen";
 
 const emotions = [
   "Stressed",
@@ -76,7 +76,6 @@ function GuidedMeditationScreen({ navigation }) {
       <TouchableOpacity
         onPress={() => {
           if (selectedEmotion === "") {
-            // make border of input red
             setInputStyle({
               ...styles.textInput,
               borderColor: "red",
