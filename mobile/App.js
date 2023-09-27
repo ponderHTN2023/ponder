@@ -10,10 +10,10 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MeditationTimer from "./components/MeditationTimer";
-import Onboarding from "./components/Onboarding";
-import Onboarding2 from "./components/Onboarding2";
-import Onboarding3 from "./components/Onboarding3";
-import Onboarding4 from "./components/Onboarding4";
+import Onboarding from "./screens/Onboarding";
+import Onboarding2 from "./screens/Onboarding2";
+import Onboarding3 from "./screens/Onboarding3";
+import Onboarding4 from "./screens/Onboarding4";
 import HomeScreen from "./components/HomeScreen";
 import Duration from "./components/Duration";
 import GuidedMeditationOptionalScreen from "./components/GuidedMeditationOptionalScreen";
