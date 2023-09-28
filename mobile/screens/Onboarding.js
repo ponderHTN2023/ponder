@@ -14,7 +14,7 @@ const Onboarding = ({ navigation }) => {
       <View style={styles.container}>
         {/* Skip Button */}
         <TouchableOpacity
-          onPress={() => navigation.navigate("HomeScreen")}
+          onPress={() => navigation.navigate("BottomTabs")}
           style={styles.skipButton}
         >
           <Text style={styles.buttonText}>Skip</Text>

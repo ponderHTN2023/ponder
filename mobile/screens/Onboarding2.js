@@ -24,7 +24,7 @@ const Onboarding2 = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.navigate("HomeScreen")}
+            onPress={() => navigation.navigate("BottomTabs")}
           >
             <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
               Skip

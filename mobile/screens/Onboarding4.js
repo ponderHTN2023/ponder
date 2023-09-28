@@ -24,7 +24,7 @@ const Onboarding4 = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.navigate("HomeScreen")}
+            onPress={() => navigation.navigate("BottomTabs")}
           >
             <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
               Skip
@@ -45,7 +45,7 @@ const Onboarding4 = ({ navigation }) => {
             into your thoughts and emotions.
           </Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate("HomeScreen")}
+            onPress={() => navigation.navigate("BottomTabs")}
             style={styles.buttonContainer}
           >
             <Text style={styles.buttonText}>Start Meditating</Text>
