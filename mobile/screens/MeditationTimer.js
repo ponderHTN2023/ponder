@@ -40,7 +40,7 @@ const MeditationTimer = ({ route, navigation }) => {
   useEffect(() => {
     const setupAudio = async () => {
       try {
-        // await generateMeditation();
+        await generateMeditation();
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           staysActiveInBackground: true,
