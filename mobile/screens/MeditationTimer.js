@@ -17,7 +17,6 @@ const MeditationTimer = ({ route, navigation }) => {
   const DURATION = route.params?.duration * 60 || 60;
   const emotion = route.params?.emotion;
   const technique = route.params?.technique;
-  console.log("params:", route.params);
   const [loading, setLoading] = useState(false);
 
   const [isActive, setIsActive] = useState(false);

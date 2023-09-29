@@ -65,7 +65,7 @@ class GenerateMeditationView(APIView):
         for i in range(len(meditation)):
             if meditation[i]:
                 text += meditation[i]
-                text += '<break time="3s"/>' if i != len(meditation) - 1 else ""
+                text += '<break time="7s"/>' if i != len(meditation) - 1 else ""
         text += "</speak>"
 
         print("creating meditation text:", text)
