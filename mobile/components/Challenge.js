@@ -12,18 +12,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { updateChallenge } from "../api/challenges";
 
-const Challenge = ({
-  id,
-  title,
-  description,
-  buttonText,
-  color,
-  isChecked,
-}) => {
+const Challenge = ({ id, title, onReset, description, isChecked }) => {
   const [checked, setChecked] = React.useState(isChecked);
+
   const onCheck = async () => {
-    await updateChallenge({ id: id, completed: !checked });
     setChecked(!checked);
+    const res = await updateChallenge({ id: id, completed: !checked });
+    if (res.data.reset === true) {
+      onReset();
+    }
   };
   return (
     <TouchableOpacity onPress={onCheck}>

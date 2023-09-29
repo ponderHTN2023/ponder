@@ -1,27 +1,36 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { getChallenges } from "../../api/challenges";
 import Challenge from "../Challenge";
 
 export default function ChallengesTab() {
   const [challenges, setChallenges] = React.useState([]);
 
-  useEffect(() => {
+  const sortedChallenges = (challenges) => {
+    return challenges.sort((a, b) => {
+      if (a.completed && !b.completed) {
+        return 1;
+      } else if (!a.completed && b.completed) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  };
+
+  populateChallenges = async () => {
     getChallenges().then((res) => {
       if (res.status !== 200) {
         return;
       }
       setChallenges(res.data);
     });
+  };
+
+  useEffect(() => {
+    populateChallenges();
   }, []);
+
   if (challenges.length === 0) {
     return (
       <View style={styles.page}>
@@ -44,16 +53,14 @@ export default function ChallengesTab() {
         Weekly Challenges
       </Text>
       <FlatList
-        data={challenges}
+        data={sortedChallenges(challenges)}
         renderItem={({ item }) => (
           <Challenge
             id={item.id}
             title={item.title}
+            onReset={() => populateChallenges()}
             description={item.content}
-            buttonText="View"
-            checked={item.completed}
-            color="#1DAABD"
-            buttonColor="rgba(29, 0, 65, 0.49)"
+            isChecked={item.completed}
           />
         )}
         keyExtractor={(item) => item.id}

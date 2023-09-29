@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.urls import path
 from rest_framework import routers
-from app.views import GenerateMeditationView, ChallengeView, JournalsView
+from app.views import GenerateMeditationView, ChallengeView, JournalsView, UserView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,4 +26,6 @@ urlpatterns = [
     path("api/challenges/<int:id>", ChallengeView.as_view(), name="update_challenge"),
     path("api/journals/", JournalsView.as_view(), name="journals"),
     path("api/journals/<int:id>", JournalsView.as_view(), name="update_journal"),
+    path("api/users/", UserView.as_view(), name="create_user"),
+    path("api/users/<int:id>", UserView.as_view(), name="get_user"),
 ]
