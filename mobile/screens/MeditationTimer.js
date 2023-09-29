@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   SafeAreaView,
+  Image,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import { Audio } from "expo-av";
@@ -18,7 +19,7 @@ const MeditationTimer = ({ route, navigation }) => {
   const emotion = route.params?.emotion;
   const technique = route.params?.technique;
   const [loading, setLoading] = useState(false);
-
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [remainingTime, setRemainingTime] = useState(DURATION);
@@ -39,7 +40,7 @@ const MeditationTimer = ({ route, navigation }) => {
   useEffect(() => {
     const setupAudio = async () => {
       try {
-        await generateMeditation();
+        // await generateMeditation();
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           staysActiveInBackground: true,
@@ -72,8 +73,10 @@ const MeditationTimer = ({ route, navigation }) => {
   const handlePress = async () => {
     if (isActive) {
       sound && (await sound.pauseAsync());
+      setIsPlaying(false);
     } else {
       sound && (await sound.playAsync());
+      setIsPlaying(true);
     }
     setIsActive(!isActive);
   };
@@ -118,6 +121,7 @@ const MeditationTimer = ({ route, navigation }) => {
         onPress={async () => {
           if (sound) {
             await sound.stopAsync();
+            setIsPlaying(false);
           }
           navigation.navigate("Home");
         }}
@@ -129,20 +133,27 @@ const MeditationTimer = ({ route, navigation }) => {
           cx="100"
           cy="100"
           r="95"
-          stroke="blue"
-          strokeWidth="12"
-          fill="none"
+          stroke="#C9B0FF"
+          strokeWidth="10"
+          fill="#7000E0"
           strokeLinecap="round"
           transform="rotate(-90 100 100)"
           strokeDasharray={`${progress * Math.PI * 2 * 95} 600`}
         />
       </Svg>
+      <View style={styles.button}>
+        <TouchableOpacity onPress={handlePress}>
+          <Image
+            source={
+              isPlaying
+                ? require("../assets/pause.png")
+                : require("../assets/play.png")
+            }
+          />
+        </TouchableOpacity>
+      </View>
+
       <Text style={styles.countdown}>{formatTime(remainingTime)}</Text>
-      <Button
-        title={isActive ? "Pause" : "Start"}
-        onPress={handlePress}
-        style={styles.button}
-      />
     </View>
   );
 };
@@ -158,10 +169,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   button: {
-    marginTop: 10,
+    // marginTop: 10,
     position: "absolute",
-    bottom: 50,
-    zIndex: 1,
+    top: 410,
+    left: 185,
+    zIndex: 100,
   },
   countdown: {
     fontSize: 24,
@@ -173,8 +185,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 70,
     left: 27,
-    padding: 10,
-    borderRadius: 100,
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderRadius: 1000,
     backgroundColor: "rgba(112, 0, 224, 0.45)",
     shadowColor: "#000",
     shadowOffset: {
@@ -187,7 +202,7 @@ const styles = StyleSheet.create({
   },
   crossButtonText: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "800",
     color: "black",
   },
 });
