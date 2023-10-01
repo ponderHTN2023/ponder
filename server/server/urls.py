@@ -22,10 +22,11 @@ from app.views import GenerateMeditationView, ChallengeView, JournalsView, UserV
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/meditation", GenerateMeditationView.as_view(), name="generate"),
-    path("api/challenges/", ChallengeView.as_view(), name="challenges"),
     path("api/challenges/<int:id>", ChallengeView.as_view(), name="update_challenge"),
-    path("api/journals/", JournalsView.as_view(), name="journals"),
+    path("api/users/<int:id>/challenges/", ChallengeView.as_view(), name="challenges"),
     path("api/journals/<int:id>", JournalsView.as_view(), name="update_journal"),
-    path("api/users/", UserView.as_view(), name="create_user"),
-    path("api/users/<int:id>", UserView.as_view(), name="get_user"),
+    path("api/journals/", JournalsView.as_view(), name="journals"),
+    path("api/users/<str:email>", UserView.as_view(), name="get_user"),
+    path("api/users/", UserView.as_view(), name="create_user")
+
 ]

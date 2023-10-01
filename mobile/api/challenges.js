@@ -1,6 +1,6 @@
-export const getChallenges = async () => {
+export const getChallenges = async (userId) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/challenges`
+    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/users/${userId}/challenges`
   );
   const data = await response.json();
   return { status: response.status, data };

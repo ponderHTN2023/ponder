@@ -13,6 +13,7 @@ import { Circle, Svg } from "react-native-svg";
 import { Audio } from "expo-av";
 import { Asset } from "expo-asset";
 import { createMeditation } from "../api/meditation";
+import Loading from "../components/Loading";
 
 const MeditationTimer = ({ route, navigation }) => {
   const DURATION = route.params?.duration * 60 || 60;
@@ -57,7 +58,7 @@ const MeditationTimer = ({ route, navigation }) => {
         console.error("Error setting up audio:", error);
       }
     };
-    if (!sound) {
+    if (!sound && !loading) {
       setupAudio();
     }
   }, []);
@@ -108,9 +109,9 @@ const MeditationTimer = ({ route, navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.countdown}>Loading...</Text>
-      </View>
+      <Loading
+        text={"Crafting meditation...\nThis could take up to a minute."}
+      />
     );
   }
 

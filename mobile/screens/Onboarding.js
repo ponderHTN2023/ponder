@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -7,8 +7,11 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
+import { StateContext } from "../context/state";
 
 const Onboarding = ({ navigation }) => {
+  const [user, setUser] = useContext(StateContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>

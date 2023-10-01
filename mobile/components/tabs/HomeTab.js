@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Card from "../Card";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { StateContext } from "../../context/state";
 
 export default function HomeTab() {
   const navigation = useNavigation();
+  const [user, setUser] = useContext(StateContext);
+  const { signOut, sessionId, getToken } = useAuth();
+
+  const onSignOut = async () => {
+    setUser(null);
+    await signOut();
+    console.log("signed out!");
+    navigation.navigate("Auth");
+  };
 
   return (
     <View style={styles.page}>
+      <Button title="Sign Out" onPress={onSignOut} />
       <View
         style={{
           alignItems: "center",
@@ -24,12 +36,12 @@ export default function HomeTab() {
             textAlign: "center",
           }}
         >
-          Happy Sunday, Sebastian!
+          Happy Sunday, {user.name}!
         </Text>
       </View>
       <Card
         title="Guided Meditation"
-        description={`How are you feeling today, Sebastian?`}
+        description={`How are you feeling today, ${user.name}?`}
         buttonText="Begin"
         color="#D847AF"
         buttonColor="rgba(29, 0, 65, 0.49)"

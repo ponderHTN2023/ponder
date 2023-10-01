@@ -13,7 +13,7 @@ import time
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
         meditation = self.generate_meditations(request.data)
-        self.google_cloud_tts(meditation)
+        self.google_cloud_tts(meditation, request.data['duration'])
         # self.bark_tts(meditation)
         return Response(meditation)
 
@@ -23,14 +23,16 @@ class GenerateMeditationView(APIView):
                 "duration": 60,
                 "context": "I have a big presentation coming up and I'm feeling nervous.",
             }
-        prompt = f"Pretend you are a gifted guru with all knowledge of meditation and spirituality. Generate a unique personalized guided meditation in {data['duration']//9} sentences, please.\n\n"
+        divisor = (10 + (data['duration']//60)*2) if data['duration'] > 60 else 10
+        num_lines = data['duration']//divisor
+        prompt = f"Pretend you are a gifted guru with all knowledge of meditation and spirituality. Generate a unique personalized guided meditation in {num_lines} sentences and each complete sentence should be on a new line, please.\n\n"
         if data.get("duration"):
             prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
         if data.get("technique"):
             prompt += "Meditation Technique: " + data.get("technique") + "\n"
         if data.get("emotion"):
             prompt += "Emotion: " + data.get("emotion") + "\n"
-        prompt += f"\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {', technique, and duration' if data.get('technique') else 'and duration' }. Make it as personalized as possible. Each sentence of the meditation text should end in a period followed by a single new line character. Thank you!"
+        prompt += f'\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {", technique, and duration" if data.get("technique") else "and duration" }. Make it as personalized as possible. The format of the output is \nExample sentence.\nAnother sentence.\nAnother sentence.\n'
 
         print("sending request...")
         print("prompt:", prompt, "\n\n")
@@ -58,14 +60,15 @@ class GenerateMeditationView(APIView):
             "temperature": 1.2,
         }
 
-    def google_cloud_tts(self, meditation):
+    def google_cloud_tts(self, meditation, duration):
         print("meditation result:", meditation)
+        break_length = 7 + (duration - 60) // 60
         meditation = meditation.split("\n")
         text = "<speak>"
         for i in range(len(meditation)):
             if meditation[i]:
                 text += meditation[i]
-                text += '<break time="7s"/>' if i != len(meditation) - 1 else ""
+                text += f'<break time="{break_length}s"/>' if i != len(meditation) - 1 else ""
         text += "</speak>"
 
         print("creating meditation text:", text)

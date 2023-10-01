@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import React, { useEffect, useContext } from "react";
+import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { getChallenges } from "../../api/challenges";
 import Challenge from "../Challenge";
+import { StateContext } from "../../context/state";
+import Loading from "../Loading";
 
 export default function ChallengesTab() {
   const [challenges, setChallenges] = React.useState([]);
+  const [user, setUser] = useContext(StateContext);
 
   const sortedChallenges = (challenges) => {
     return challenges.sort((a, b) => {
@@ -19,7 +22,7 @@ export default function ChallengesTab() {
   };
 
   populateChallenges = async () => {
-    getChallenges().then((res) => {
+    getChallenges(user.id).then((res) => {
       if (res.status !== 200) {
         return;
       }
@@ -32,11 +35,7 @@ export default function ChallengesTab() {
   }, []);
 
   if (challenges.length === 0) {
-    return (
-      <View style={styles.page}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <Loading />;
   }
   return (
     <View style={styles.page}>

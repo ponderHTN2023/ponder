@@ -8,34 +8,33 @@ import os
 
 
 class ChallengeView(APIView):
-    def get(self, request, format=None):
-        user = self.get_or_create_first_user()
-        challenges = Challenge.objects.filter(user=user)
+    def get(self, request, id, format=None):
+        user = User.objects.get(id=id)
+        challenges = Challenge.objects.filter(user=user, active=True)
         curr_challenges = challenges.values() if challenges else []
         if challenges.filter(completed=True).count() == len(challenges):
-            challenges.delete()
+            challenges.update(active=False)
             challenges = None
         if not challenges:
             print("generating challenges...")
-            import pdb; pdb.set_trace()
             generated = self.generate_challenges(curr_challenges)
-            challenges = self.process_results(generated)
+            challenges = self.process_results(generated, user)
 
         res = challenges.values()
         return Response(res)
     
     def post(self, request, id, format=None):
-        user = self.get_or_create_first_user()
         challenge = Challenge.objects.get(id=id)
+        user = challenge.user
         challenge.completed = request.data["completed"]
         challenge.save()
         incomplete = Challenge.objects.filter(user=user, completed=False)
         if incomplete.count() == 0:
             challenges = Challenge.objects.filter(user=user)
             curr_challenges = challenges.values() if challenges else []
-            challenges.delete()
+            challenges.update(active=False)
             challenges = self.generate_challenges(curr_challenges)
-            self.process_results(challenges)
+            self.process_results(challenges, user)
             return Response({"reset": True, "message": "success"})
         return Response({"reset": False, "message": "success"})
     
@@ -50,12 +49,12 @@ class ChallengeView(APIView):
         return users.first()
 
     def generate_challenges(self, challenges):
-        prompt = "Generate 7 unique mindfulness and kindfulness challenges that inspire a healthy relationship with oneself and others, and promote presence in life. Please generate these challenges in solely raw JSON object with the each key being the challenge title and the value being the challenge description. Example: {'Mindfulness Walk': 'example text'}. Thank you!\n\nThe current challenges are:\n\n" + "\n".join(
+        prompt = 'Generate 7 unique mindfulness and kindfulness challenges that inspire a healthy relationship with oneself and others, and promote presence in life. Please generate these challenges in raw JSON object list form with no extra characters or formatting. Each key should be the challenge title and the value is the challenge description. Example: [{"Mindfulness Walk": "example text"}, {"Gratitude Journal": "Do Stuff"}]. Thank you!\n\nThe current challenges that should not be repeated are:\n\n[' + ''.join(
             [
-                challenge.title + ": " + challenge.content + "\n"
+                '{"' + challenge['title'] + '": "' + challenge['content'] + '"}, '
                 for challenge in challenges
-            ]
-        )
+            ]    
+        )+ "]"
         headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + os.environ.get("OPENAI_API_KEY"),
@@ -78,10 +77,11 @@ class ChallengeView(APIView):
             "temperature": 1.2,
         }
 
-    def process_results(self, generated):
+    def process_results(self, generated, user):
         print("results:", generated)
         result = json.loads(generated)
-        for key in result.keys():
-            user = User.objects.get(id=1)
-            Challenge.objects.create(title=key, content=result[key], user=user)
+        for challenge in result:
+            key = list(challenge.keys())[0]
+            value = list(challenge.values())[0]
+            Challenge.objects.create(title=key, content=value, user=user)
         return Challenge.objects.all()
