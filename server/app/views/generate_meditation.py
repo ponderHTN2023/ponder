@@ -105,7 +105,8 @@ class GenerateMeditationView(APIView):
             time.sleep(5)
             print('Audio content written to file "meditation.mp3"')
         return self.upload_to_gc_bucket()
-        
+    
+    # https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3
     def upload_to_gc_bucket(self):
         # Explicitly use service account credentials by specifying the private key
         # file.
