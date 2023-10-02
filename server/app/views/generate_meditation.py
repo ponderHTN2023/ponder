@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import FileResponse
 import requests
 import os
-from google.cloud import texttospeech
+from google.cloud import texttospeech, storage
 from bark import SAMPLE_RATE, generate_audio, preload_models
+import uuid
 from scipy.io.wavfile import write as write_wav
 import nltk
 import numpy as np
@@ -13,9 +15,9 @@ import time
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
         meditation = self.generate_meditations(request.data)
-        self.google_cloud_tts(meditation, request.data['duration'])
+        upload_url = self.google_cloud_tts(meditation, request.data['duration'])
         # self.bark_tts(meditation)
-        return Response(meditation)
+        return Response({"meditation": upload_url})
 
     def generate_meditations(self, data):
         if not data:
@@ -24,6 +26,8 @@ class GenerateMeditationView(APIView):
                 "context": "I have a big presentation coming up and I'm feeling nervous.",
             }
         divisor = (10 + (data['duration']//60)*2) if data['duration'] > 60 else 10
+        if (data['duration']//60) > 5:
+            divisor = (14 + (data['duration']//60)*2)
         num_lines = data['duration']//divisor
         prompt = f"Pretend you are a gifted guru with all knowledge of meditation and spirituality. Generate a unique personalized guided meditation in {num_lines} sentences and each complete sentence should be on a new line, please.\n\n"
         if data.get("duration"):
@@ -92,7 +96,7 @@ class GenerateMeditationView(APIView):
         )
 
         # The response's audio_content is binary.
-        with open(f"../mobile/assets/meditation.mp3", "wb") as out:
+        with open(f"app/assets/meditation.mp3", "wb") as out:
             response = client.synthesize_speech(
                 input=synthesis_input, voice=voice, audio_config=audio_config
             )
@@ -100,7 +104,26 @@ class GenerateMeditationView(APIView):
             out.write(response.audio_content)
             time.sleep(5)
             print('Audio content written to file "meditation.mp3"')
+        return self.upload_to_gc_bucket()
+        
+    def upload_to_gc_bucket(self):
+        # Explicitly use service account credentials by specifying the private key
+        # file.
+        storage_client = storage.Client.from_service_account_json(
+            "../server/credentials.json"
+        )
 
+        # Make an authenticated API request
+        buckets = list(storage_client.list_buckets())
+        print(buckets)
+        bucket = storage_client.get_bucket("ponder_meditations")
+        random_id = str(uuid.uuid4())
+        blob = bucket.blob(f"meditation-{random_id}.mp3")
+        blob.upload_from_filename("app/assets/meditation.mp3")
+        # blob.make_public()
+        print("File uploaded to meditation-bucket")
+        return blob.public_url
+    
     def bark_tts(self, meditation):
         # download and load all models
         preload_models()

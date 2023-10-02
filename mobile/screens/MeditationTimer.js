@@ -35,13 +35,13 @@ const MeditationTimer = ({ route, navigation }) => {
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoading(false);
-    return response;
+    return response["uri"];
   };
 
   useEffect(() => {
     const setupAudio = async () => {
       try {
-        await generateMeditation();
+        const uri = await generateMeditation();
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           staysActiveInBackground: true,
@@ -49,10 +49,8 @@ const MeditationTimer = ({ route, navigation }) => {
         });
 
         const soundInstance = new Audio.Sound();
-        const soundAsset = Asset.fromModule(
-          require("../assets/meditation.mp3")
-        );
-        await soundInstance.loadAsync(soundAsset);
+        await soundInstance.loadAsync({ uri: uri });
+        console.log("soundInstance:", soundInstance);
         setSound(soundInstance);
       } catch (error) {
         console.error("Error setting up audio:", error);
@@ -109,9 +107,17 @@ const MeditationTimer = ({ route, navigation }) => {
 
   if (loading) {
     return (
+      // <View>
+      //   <TouchableOpacity
+      //     style={styles.crossButton}
+      //     onPress={() => navigation.navigate("Home")}
+      //   >
+      //     <Text style={styles.crossButtonText}>✕</Text>
+      // </TouchableOpacity>
       <Loading
         text={"Crafting meditation...\nThis could take up to a minute."}
       />
+      // </View>
     );
   }
 

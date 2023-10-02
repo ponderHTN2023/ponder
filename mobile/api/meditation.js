@@ -7,5 +7,7 @@ export const createMeditation = async (data) => {
       body: JSON.stringify(data),
     }
   );
-  return { status: response.status };
+  const res = await response.json();
+
+  return { status: response.status, uri: res.meditation };
 };
