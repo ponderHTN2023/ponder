@@ -28,15 +28,7 @@ class GenerateMeditationView(APIView):
         if (data['duration']//60) > 5:
             divisor = (14 + (data['duration']//60)*2)
         num_lines = data['duration']//divisor
-        prompt = f"Pretend you are a gifted guru with all knowledge of meditation and spirituality. Generate a unique personalized guided meditation in {num_lines} sentences and each complete sentence should be on a new line, please.\n\n"
-        if data.get("duration"):
-            prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
-        if data.get("technique"):
-            prompt += "Meditation Technique: " + data.get("technique") + "\n"
-        if data.get("emotion"):
-            prompt += "Emotion: " + data.get("emotion") + "\n"
-        prompt += f'\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {", technique, and duration" if data.get("technique") else "and duration" }. Make it as personalized as possible. The format of the output is \nExample sentence.\nAnother sentence.\nAnother sentence.\n'
-
+        prompt = self.prompt_1(data, num_lines)
         print("sending request...")
         print("prompt:", prompt, "\n\n")
         headers = {
@@ -55,7 +47,39 @@ class GenerateMeditationView(APIView):
                 "error": "Sorry, I couldn't generate a meditation for you. Please try again."
             }
         return res
-
+    
+    def prompt_1(self, data, num_lines):
+        prompt = f"As a skilled meditation guide with deep insights, craft a profound guided meditation for a unique experience in {num_lines} sentences. Each sentence should be on a new line.\n\n"
+        if data.get("duration"):
+            prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
+        if data.get("technique"):
+            prompt += "Meditation Technique: " + data.get("technique") + "\n"
+        if data.get("emotion"):
+            prompt += "Emotion: " + data.get("emotion") + "\n"
+        prompt += f'Imagine you are guiding someone through a journey tailored to their emotions and situation. Make it deeply personal. Format your output like this:\nExample sentence.\nAnother sentence.\nAnother sentence.\n'
+        return prompt
+    
+    def prompt_2(self, data, num_lines):
+        prompt = f"Imagine you're a seasoned meditation guide crafting a personalized session. Generate a profound and unique personalized guided meditation in {num_lines} sentences. Each sentence should be on a new line.\n\n"
+        if data.get("duration"):
+            prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
+        if data.get("technique"):
+            prompt += "Meditation Technique: " + data.get("technique") + "\n"
+        if data.get("emotion"):
+            prompt += "Emotion: " + data.get("emotion") + "\n"
+        prompt += f'\nCreate a bespoke tailored guided meditation that aligns directly with the current state and situation, {", technique, and duration" if data.get("technique") else "and duration" }. Incorporate soothing imagery, empowering affirmations, and gentle guidance. Make it deeply personal. Format your output like this:\nExample sentence.\nAnother sentence.\nAnother sentence.\n'
+        return prompt
+    
+    def prompt_3(self, data, num_lines):
+        prompt = f"Pretend you are a gifted guru with all knowledge of meditation and spirituality. Generate a unique personalized guided meditation in {num_lines} sentences and each complete sentence should be on a new line, please.\n\n"
+        if data.get("duration"):
+            prompt += "Duration: " + str(data["duration"]) + " seconds" + "\n"
+        if data.get("technique"):
+            prompt += "Meditation Technique: " + data.get("technique") + "\n"
+        if data.get("emotion"):
+            prompt += "Emotion: " + data.get("emotion") + "\n"
+        prompt += f'\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {", technique, and duration" if data.get("technique") else "and duration" }. Make it as personalized as possible. The format of the output is \nExample sentence.\nAnother sentence.\nAnother sentence.\n'
+        return prompt
     def get_json(self, prompt):
         return {
             "model": "gpt-3.5-turbo",
