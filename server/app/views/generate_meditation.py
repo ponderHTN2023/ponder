@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import FileResponse
 import requests
 import os
 from google.cloud import texttospeech, storage
@@ -121,7 +120,6 @@ class GenerateMeditationView(APIView):
         random_id = str(uuid.uuid4())
         blob = bucket.blob(f"meditation-{random_id}.mp3")
         blob.upload_from_filename("app/assets/meditation.mp3")
-        # blob.make_public()
         print("File uploaded to meditation-bucket")
         return blob.public_url
     

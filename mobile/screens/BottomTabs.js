@@ -46,7 +46,7 @@ export default function BottomTabs() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#2A0060" }}>
+    <View style={{ flex: 1, backgroundColor: "#2A0060", paddingTop: 40 }}>
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: { height: 60 },
@@ -61,10 +61,9 @@ export default function BottomTabs() {
               const image = focused
                 ? require("../assets/home-selected.png")
                 : require("../assets/home.png");
-              return <Image source={image} />;
+              return <Image source={image} style={styles.homeIcon} />;
             },
             headerShown: false,
-            tabBarIconStyle: styles.tabBarIcon,
             tabBarStyle: { backgroundColor: "#2A0060" },
             tabBarLabelStyle: styles.tabBarLabel,
           }}
@@ -78,10 +77,9 @@ export default function BottomTabs() {
               const image = focused
                 ? require("../assets/checkmark-selected.png")
                 : require("../assets/checkmark.png");
-              return <Image source={image} />;
+              return <Image source={image} style={styles.challengeIcon} />;
             },
             headerShown: false,
-            tabBarIconStyle: styles.tabBarIcon,
             tabBarStyle: { backgroundColor: "#2A0060" },
             tabBarLabelStyle: styles.tabBarLabel,
           }}
@@ -95,16 +93,15 @@ export default function BottomTabs() {
               const image = focused
                 ? require("../assets/yoga-selected.png")
                 : require("../assets/yoga.png");
-              return <Image source={image} />;
+              return <Image source={image} style={styles.meditateIcon} />;
             },
             headerShown: false,
-            tabBarIconStyle: styles.tabBarIcon,
             tabBarStyle: { backgroundColor: "#2A0060" },
             tabBarLabelStyle: styles.tabBarLabel,
           }}
         />
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -116,14 +113,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#2A0060",
   },
   homeIcon: {
-    width: 29,
-    height: 26,
-    flexShrink: 0,
-    backgroundColor: "lightgray",
-  },
-  tabBarIcon: {
     marginTop: 9,
     marginBottom: 5,
+    width: 24,
+    height: 24,
+  },
+  meditateIcon: {
+    marginTop: 9,
+    marginBottom: 5,
+    width: 17,
+    height: 24,
+  },
+  challengeIcon: {
+    marginTop: 9,
+    marginBottom: 5,
+    width: 22,
+    height: 22,
   },
   tabBarLabel: {
     color: "white",

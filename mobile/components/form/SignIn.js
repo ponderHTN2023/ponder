@@ -51,9 +51,9 @@ export default function SignInForm({ navigation }) {
       navigation.navigate("BottomTabs");
     } catch (err) {
       console.log(err);
-      alert("Invalid email or password");
       setEmailErr(true);
       setPasswordErr(true);
+      alert("Invalid email or password");
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Card from "../Card";
 import { useAuth, useUser } from "@clerk/clerk-react";
@@ -9,6 +10,12 @@ export default function HomeTab() {
   const navigation = useNavigation();
   const [user, setUser] = useContext(StateContext);
   const { signOut, sessionId, getToken } = useAuth();
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
 
   const onSignOut = async () => {
     setUser(null);
@@ -19,7 +26,9 @@ export default function HomeTab() {
 
   return (
     <View style={styles.page}>
-      <Button title="Sign Out" onPress={onSignOut} />
+      <View style={{ alignItems: "flex-end", marginBottom: 12 }}>
+        <Button style={{ fontSize: 10 }} title="Log Out" onPress={onSignOut} />
+      </View>
       <View
         style={{
           alignItems: "center",
@@ -31,45 +40,95 @@ export default function HomeTab() {
             color: "white",
             fontSize: 24,
             display: "flex",
-            marginBottom: 32,
+            marginBottom: 24,
             fontWeight: "500",
             textAlign: "center",
           }}
         >
-          Happy Sunday, {user.name}!
+          {/* current weekday */}
+          Happy{" "}
+          {
+            currentDate
+              .toLocaleDateString("en-Us", { weekday: "long" })
+              .split(",")[0]
+          }
+          ,{"\n"}
+          {user.name}
         </Text>
       </View>
       <Card
         title="Guided Meditation"
         description={`How are you feeling today, ${user.name}?`}
         buttonText="Begin"
-        color="#D847AF"
+        color="#B353FF"
         buttonColor="rgba(29, 0, 65, 0.49)"
         onPress={() => navigation.navigate("GuidedMeditation")}
       />
       <Card
         title="Weekly Challenges"
         description={
-          <>
-            <Text style={{ textDecorationLine: "underline" }}>
+          <View style={{ color: "white" }}>
+            <Text
+              style={{
+                textDecorationLine: "underline",
+                fontWeight: "500",
+                fontSize: 16,
+                marginBottom: 8,
+                color: "white",
+              }}
+            >
               Self-Compassion Practice
             </Text>
-            <Text>{`\n\nWrite a letter of self-compassion to yourself, acknowledging your strengths and forgiving your imperfections.`}</Text>
-          </>
+            <Text
+              style={{ color: "white", fontSize: 16 }}
+            >{`Write a letter of self-compassion to yourself, acknowledging your strengths and forgiving your imperfections.`}</Text>
+          </View>
         }
         buttonText="View All"
-        color="#1DAABD"
+        color="#7000E0"
         buttonColor="rgba(29, 0, 65, 0.49)"
         onPress={() => navigation.navigate("Challenges")}
       />
 
-      <Card
-        title="Journal"
-        color="#FF8A00"
-        description={"Coming soon..."}
-        buttonText="New Entry"
-        buttonColor="rgba(29, 0, 65, 0.49)"
-      />
+      <View style={styles.card}>
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 20,
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.cardTitle}>Journal</Text>
+          <View
+            style={{
+              marginLeft: "auto",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Feather name="calendar" size={16} color="white" />
+            <Text
+              style={{
+                fontSize: 16,
+                marginLeft: 8,
+                color: "white",
+                fontWeight: "500",
+              }}
+            >
+              {formattedDate}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            style={styles.cardButton}
+            onPress={() => navigation.navigate("Journals")}
+          >
+            <Text style={styles.buttonText}>New Entry</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
@@ -78,7 +137,37 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     height: "100%",
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#2A0060",
+  },
+  card: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 15,
+    backgroundColor: "#7000E0",
+  },
+  cardTitle: {
+    fontSize: 24,
+    fontWeight: "500",
+    color: "white",
+  },
+  cardDescription: {
+    fontSize: 16,
+    marginBottom: 24,
+    color: "white",
+    textAlign: "left",
+  },
+  cardButton: {
+    backgroundColor: "rgba(29, 0, 65, 0.49)",
+    padding: 10,
+    alignItems: "center",
+    width: 217,
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 18,
+    textAlign: "left",
   },
 });

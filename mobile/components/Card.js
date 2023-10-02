@@ -13,12 +13,14 @@ export default function Card({
     <View style={{ ...styles.card, backgroundColor: color }}>
       <Text style={styles.cardTitle}>{title}</Text>
       <Text style={styles.cardDescription}>{description}</Text>
-      <TouchableOpacity
-        style={{ ...styles.cardButton, backgroundColor: buttonColor }}
-        onPress={onPress}
-      >
-        <Text style={styles.buttonText}>{buttonText}</Text>
-      </TouchableOpacity>
+      <View style={{ alignItems: "center" }}>
+        <TouchableOpacity
+          style={{ ...styles.cardButton, backgroundColor: buttonColor }}
+          onPress={onPress}
+        >
+          <Text style={styles.buttonText}>{buttonText}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -26,24 +28,22 @@ export default function Card({
 styles = StyleSheet.create({
   card: {
     borderRadius: 20,
-    padding: 15,
-    marginBottom: 15,
-    alignItems: "center",
+    padding: 20,
+    marginBottom: 17,
   },
   cardTitle: {
     fontSize: 24,
     fontWeight: "500",
-    marginBottom: 10,
+    marginBottom: 14,
     color: "white",
   },
   cardDescription: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 24,
     color: "white",
-    textAlign: "center",
+    textAlign: "left",
   },
   cardButton: {
-    backgroundColor: "#3498db",
     padding: 10,
     alignItems: "center",
     width: 217,
