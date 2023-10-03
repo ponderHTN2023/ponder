@@ -27,7 +27,7 @@ export default function HomeTab() {
   return (
     <View style={styles.page}>
       <View
-        style={{ alignItems: "flex-start", marginBottom: 16, marginTop: 10 }}
+        style={{ alignItems: "flex-start", marginBottom: 16, marginTop: 16 }}
       >
         <TouchableOpacity onPress={onSignOut}>
           <Text style={{ fontSize: 16, color: "#B353FF" }}>Log Out</Text>

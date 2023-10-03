@@ -12,14 +12,14 @@ import SignUpForm from "../components/form/SignUp";
 import SignInForm from "../components/form/SignIn";
 
 const Auth = ({ navigation }) => {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
         <Image source={require("../assets/icon.png")} style={styles.logo} />
         <Text style={[styles.title, { color: "white" }]}>
-          {isSignUp ? "Create Account" : "Welcome Back!"}
+          {isSignUp ? "Create Account" : "Welcome back!"}
         </Text>
       </View>
       {isSignUp ? (

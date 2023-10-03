@@ -49,7 +49,7 @@ class ChallengeView(APIView):
         return users.first()
 
     def generate_challenges(self, challenges):
-        prompt = 'Generate 5 unique mindfulness and kindfulness challenges that foster a healthy relationship with oneself and others, promoting presence in daily life. Output the challenges as a raw JSON object list with no extra characters or formatting. Each key represents the challenge title, and the value is the challenge description. Example: [{"Title": "example text"}, {"Another title": "text"}].\n\nAvoid repeating the following challenges:[' + ''.join(
+        prompt = 'Generate 5 unique mindfulness and kindfulness challenges that foster a healthy relationship with oneself and others, promoting presence in daily life. Output the challenges as a raw JSON object list with no extra characters or formatting. Each key represents the title of the challenge, and the value is the challenge description. Example: [{"Mindfulness Walk": "example text"}].\n\nAvoid repeating the following challenges:[' + ''.join(
             [
                 '{"' + challenge['title'] + '": "' + challenge['content'] + '"}, '
                 for challenge in challenges
