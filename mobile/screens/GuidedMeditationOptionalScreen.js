@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 function GuidedMeditationOptionalScreen({ route, navigation }) {
   const techniques = [
@@ -20,12 +21,26 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
     "Visualization",
     "Mindful Walking",
   ];
-  const { emotion } = route.params;
+  const { emotion } = route?.params;
   const [technique, setTechnique] = useState("");
   const [inputStyle, setInputStyle] = useState(styles.textInput);
 
   return (
     <View style={{ ...styles.page, backgroundColor: "#2A0060" }}>
+      <TouchableOpacity
+        style={{ position: "absolute", top: 60, left: 20 }}
+        onPress={() => navigation.navigate("GuidedMeditation")}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Ionicons
+            name="chevron-back-outline"
+            stroke={3}
+            size={28}
+            color="white"
+          />
+          <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Back</Text>
+        </View>
+      </TouchableOpacity>
       <Text
         style={{
           color: "white",

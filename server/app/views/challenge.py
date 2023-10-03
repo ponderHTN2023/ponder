@@ -10,7 +10,7 @@ import os
 class ChallengeView(APIView):
     def get(self, request, id, format=None):
         user = User.objects.get(id=id)
-        challenges = Challenge.objects.filter(user=user, active=True)
+        challenges = Challenge.objects.filter(user=user).filter(active=True)
         curr_challenges = challenges.values() if challenges else []
         if challenges.filter(completed=True).count() == len(challenges):
             challenges.update(active=False)
@@ -28,7 +28,7 @@ class ChallengeView(APIView):
         user = challenge.user
         challenge.completed = request.data["completed"]
         challenge.save()
-        incomplete = Challenge.objects.filter(user=user, completed=False)
+        incomplete = Challenge.objects.filter(user=user).filter(completed=False)
         if incomplete.count() == 0:
             challenges = Challenge.objects.filter(user=user)
             curr_challenges = challenges.values() if challenges else []
@@ -49,7 +49,7 @@ class ChallengeView(APIView):
         return users.first()
 
     def generate_challenges(self, challenges):
-        prompt = 'Generate 7 unique mindfulness and kindfulness challenges that inspire a healthy relationship with oneself and others, and promote presence in life. Please generate these challenges in raw JSON object list form with no extra characters or formatting. Each key should be the challenge title and the value is the challenge description. Example: [{"Mindfulness Walk": "example text"}, {"Gratitude Journal": "Do Stuff"}]. Thank you!\n\nThe current challenges that should not be repeated are:\n\n[' + ''.join(
+        prompt = 'Generate 5 unique mindfulness and kindfulness challenges that foster a healthy relationship with oneself and others, promoting presence in daily life. Output the challenges as a raw JSON object list with no extra characters or formatting. Each key represents the challenge title, and the value is the challenge description. Example: [{"Title": "example text"}, {"Another title": "text"}].\n\nAvoid repeating the following challenges:[' + ''.join(
             [
                 '{"' + challenge['title'] + '": "' + challenge['content'] + '"}, '
                 for challenge in challenges
@@ -84,4 +84,4 @@ class ChallengeView(APIView):
             key = list(challenge.keys())[0]
             value = list(challenge.values())[0]
             Challenge.objects.create(title=key, content=value, user=user)
-        return Challenge.objects.all()
+        return Challenge.objects.filter(user=user).filter(active=True)

@@ -37,18 +37,17 @@ const Onboarding = ({ navigation }) => {
             In a world where daily stresses often pull us away from our true selves, Ponder is here to guide you back to a place of serenity and balance.
           </Text> */}
         </View>
-
-        {/* Next Button */}
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Onboarding2")}
-          style={styles.buttonContainer}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
-
-        {/* Dots */}
-        <Image source={require("../assets/dots.png")} style={styles.dots} />
       </View>
+      {/* Next Button */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Onboarding2")}
+        style={styles.buttonContainer}
+      >
+        <Text style={styles.buttonText}>Next</Text>
+      </TouchableOpacity>
+
+      {/* Dots */}
+      <Image source={require("../assets/dots.png")} style={styles.dots} />
     </SafeAreaView>
   );
 };
@@ -63,7 +62,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: "center",
-    marginBottom: 30,
   },
   logo: {
     width: 100,
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
-    marginBottom: 20,
+    marginBottom: 32,
   },
   description: {
     fontSize: 16,

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const Onboarding2 = ({ navigation }) => {
   return (
@@ -17,9 +18,17 @@ const Onboarding2 = ({ navigation }) => {
             style={styles.skipButton}
             onPress={() => navigation.navigate("Onboarding")}
           >
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
-              ⇐ Back
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="chevron-back-outline"
+                stroke={3}
+                size={28}
+                color="white"
+              />
+              <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
+                Back
+              </Text>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -75,6 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   backButton: {
+    flexDirection: "row",
     justifyContent: "flex-end",
   },
   buttonText: {
@@ -99,7 +109,7 @@ const styles = StyleSheet.create({
   image: {
     width: 190,
     height: 150,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   description: {
     fontSize: 16,

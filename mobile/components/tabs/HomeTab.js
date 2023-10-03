@@ -26,8 +26,12 @@ export default function HomeTab() {
 
   return (
     <View style={styles.page}>
-      <View style={{ alignItems: "flex-end", marginBottom: 12 }}>
-        <Button style={{ fontSize: 10 }} title="Log Out" onPress={onSignOut} />
+      <View
+        style={{ alignItems: "flex-start", marginBottom: 16, marginTop: 10 }}
+      >
+        <TouchableOpacity onPress={onSignOut}>
+          <Text style={{ fontSize: 16, color: "#B353FF" }}>Log Out</Text>
+        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -40,7 +44,7 @@ export default function HomeTab() {
             color: "white",
             fontSize: 24,
             display: "flex",
-            marginBottom: 24,
+            marginBottom: 20,
             fontWeight: "500",
             textAlign: "center",
           }}

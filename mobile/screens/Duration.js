@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { Ionicons } from "@expo/vector-icons";
 
 const Duration = ({ route, navigation }) => {
   const [selectedDuration, setSelectedDuration] = useState(1);
@@ -17,6 +18,25 @@ const Duration = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ position: "absolute", top: 60, left: 20 }}
+        onPress={() =>
+          navigation.navigate("GuidedMeditationOptional", {
+            emotion,
+            technique,
+          })
+        }
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Ionicons
+            name="chevron-back-outline"
+            stroke={3}
+            size={28}
+            color="white"
+          />
+          <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Back</Text>
+        </View>
+      </TouchableOpacity>
       <Text style={[styles.title, { color: "white" }]}>Session Duration</Text>
       <View style={styles.pickerContainer}>
         <Picker
@@ -52,6 +72,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     flexDirection: "row", // Arrange the Picker and Text horizontally
     alignItems: "center", // Align items vertically in the center
+    marginBottom: 40,
   },
   pickerStyle: {
     height: 200,
@@ -83,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
-    marginBottom: 20,
+    // marginBottom: 10,
   },
 });
 

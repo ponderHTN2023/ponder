@@ -25,6 +25,7 @@ export default function SignUpForm({ navigation }) {
     if (!isLoaded) {
       return;
     }
+
     try {
       const token = await getToken();
 
@@ -53,6 +54,8 @@ export default function SignUpForm({ navigation }) {
     } catch (err) {
       console.error(err);
       alert(err.message);
+      setEmailErr(true);
+      setPasswordErr(true);
     }
   };
 

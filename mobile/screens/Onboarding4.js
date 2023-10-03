@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const Onboarding4 = ({ navigation }) => {
   return (
@@ -17,9 +18,17 @@ const Onboarding4 = ({ navigation }) => {
             style={styles.skipButton}
             onPress={() => navigation.navigate("Onboarding3")}
           >
-            <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
-              ⇐ Back
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons
+                name="chevron-back-outline"
+                stroke={3}
+                size={28}
+                color="white"
+              />
+              <Text style={[styles.buttonText, { fontWeight: "bold" }]}>
+                Back
+              </Text>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -44,13 +53,13 @@ const Onboarding4 = ({ navigation }) => {
             Reflect on your journey, document your progress, and gain insights
             into your thoughts and emotions.
           </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("BottomTabs")}
-            style={styles.buttonContainer}
-          >
-            <Text style={styles.buttonText}>Start Meditating</Text>
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("BottomTabs")}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonText}>Start Meditating</Text>
+        </TouchableOpacity>
         <Image source={require("../assets/dots4.png")} style={styles.dots} />
       </View>
     </SafeAreaView>
@@ -119,7 +128,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: "20%",
     alignItems: "center",
-    marginTop: 130,
+    marginTop: 100,
+    marginBottom: 30,
     alignSelf: "center",
   },
 });

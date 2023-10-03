@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TextInput,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const emotions = [
   "Stressed",
@@ -28,6 +29,20 @@ function GuidedMeditationScreen({ navigation }) {
 
   return (
     <View style={{ ...styles.page, backgroundColor: "#2A0060" }}>
+      <TouchableOpacity
+        style={{ position: "absolute", top: 60, left: 20 }}
+        onPress={() => navigation.navigate("BottomTabs")}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Ionicons
+            name="chevron-back-outline"
+            stroke={3}
+            size={28}
+            color="white"
+          />
+          <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Back</Text>
+        </View>
+      </TouchableOpacity>
       <Text
         style={{
           color: "white",
@@ -43,6 +58,7 @@ function GuidedMeditationScreen({ navigation }) {
         placeholder="Custom..."
         style={inputStyle}
         value={selectedEmotion}
+        clearButtonMode="always"
         onChangeText={(text) => {
           setSelectedEmotion(text);
           setInputStyle(styles.textInput);
