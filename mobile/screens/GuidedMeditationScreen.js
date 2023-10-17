@@ -55,7 +55,7 @@ function GuidedMeditationScreen({ navigation }) {
         How are you feeling today,{"\n"}Sebastian?
       </Text>
       <TextInput
-        placeholder="Custom..."
+        placeholder="Custom... (Optional)"
         style={inputStyle}
         value={selectedEmotion}
         clearButtonMode="always"
@@ -82,17 +82,20 @@ function GuidedMeditationScreen({ navigation }) {
 
       <TouchableOpacity
         onPress={() => {
-          if (selectedEmotion === "") {
-            setInputStyle({
-              ...styles.textInput,
-              borderColor: "red",
-              borderWidth: 3,
-            });
-          } else {
-            navigation.navigate("GuidedMeditationOptional", {
-              emotion: selectedEmotion,
-            });
-          }
+          // if (selectedEmotion === "") {
+          //   setInputStyle({
+          //     ...styles.textInput,
+          //     borderColor: "red",
+          //     borderWidth: 3,
+          //   });
+          // } else {
+          //   navigation.navigate("GuidedMeditationOptional", {
+          //     emotion: selectedEmotion,
+          //   });
+          // }
+          navigation.navigate("GuidedMeditationOptional", {
+            emotion: selectedEmotion,
+          });
         }}
         style={styles.buttonContainer}
       >

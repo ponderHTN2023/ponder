@@ -25,7 +25,7 @@ export default function Card({
   );
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   card: {
     borderRadius: 20,
     padding: 20,

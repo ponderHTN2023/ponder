@@ -17,6 +17,7 @@ import HomeTab from "../components/tabs/HomeTab";
 import JournalsTab from "../components/tabs/JournalsTab";
 import { useUser } from "@clerk/clerk-react";
 import Loading from "../components/Loading";
+import ExploreTab from "../components/tabs/ExploreTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -85,10 +86,10 @@ export default function BottomTabs() {
           }}
         />
         <Tab.Screen
-          name="Journals"
-          component={JournalsTab}
+          name="Explore"
+          component={ExploreTab}
           options={{
-            tabBarLabel: "Journals",
+            tabBarLabel: "Explore",
             tabBarIcon: ({ focused }) => {
               const image = focused
                 ? require("../assets/yoga-selected.png")

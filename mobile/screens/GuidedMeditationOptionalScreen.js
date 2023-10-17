@@ -10,15 +10,15 @@ import { Ionicons } from "@expo/vector-icons";
 
 function GuidedMeditationOptionalScreen({ route, navigation }) {
   const techniques = [
-    "Relaxation",
+    "Breath Awareness",
     "Anxiety Relief",
-    "Self Compassion",
     "Self Reflection",
     "Gratitude",
     "Loving-Kindness",
-    "Mental Clarity",
-    "Empowerment",
+    "Kriya meditation",
+    "Transcendental",
     "Visualization",
+    "Vipassana",
     "Mindful Walking",
   ];
   const { emotion } = route?.params;
@@ -50,7 +50,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
           textAlign: "center",
         }}
       >
-        Which meditation technique{"\n"}would you like to try?
+        Which meditation type{"\n"}would you like to try?
       </Text>
       <TextInput
         placeholder="Please select one (Optional)"

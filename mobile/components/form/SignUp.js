@@ -52,8 +52,8 @@ export default function SignUpForm({ navigation }) {
       // await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       // setPendingVerification(true);
     } catch (err) {
-      console.error(err);
-      alert(err.message);
+      console.error(err.message);
+      alert("Email or password input is invalid.");
       setEmailErr(true);
       setPasswordErr(true);
     }
