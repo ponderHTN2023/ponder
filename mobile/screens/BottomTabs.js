@@ -18,6 +18,8 @@ import JournalsTab from "../components/tabs/JournalsTab";
 import { useUser } from "@clerk/clerk-react";
 import Loading from "../components/Loading";
 import ExploreTab from "../components/tabs/ExploreTab";
+import TimerTab from "../components/tabs/TimerTab";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +45,11 @@ export default function BottomTabs() {
   };
 
   if (!user) {
-    return <Loading />;
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <Loading />
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -63,6 +69,34 @@ export default function BottomTabs() {
                 ? require("../assets/home-selected.png")
                 : require("../assets/home.png");
               return <Image source={image} style={styles.homeIcon} />;
+            },
+            headerShown: false,
+            tabBarStyle: { backgroundColor: "#2A0060" },
+            tabBarLabelStyle: styles.tabBarLabel,
+          }}
+        />
+        <Tab.Screen
+          name="Timer"
+          component={TimerTab}
+          options={{
+            tabBarLabel: "Timer",
+            tabBarIcon: ({ focused }) => {
+              const image = focused ? (
+                <MaterialIcons
+                  name="timer"
+                  style={{ marginTop: 5, paddingBottom: 5 }}
+                  size={30}
+                  color="#C9B0FF"
+                />
+              ) : (
+                <MaterialIcons
+                  name="timer"
+                  style={{ marginTop: 5, paddingBottom: 5 }}
+                  size={30}
+                  color="white"
+                />
+              );
+              return image;
             },
             headerShown: false,
             tabBarStyle: { backgroundColor: "#2A0060" },
@@ -130,6 +164,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     width: 22,
     height: 22,
+  },
+  loadingContainer: {
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    backgroundColor: "#2A0060",
+    justifyContent: "center",
   },
   tabBarLabel: {
     color: "white",

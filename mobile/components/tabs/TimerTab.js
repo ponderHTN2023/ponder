@@ -3,41 +3,21 @@ import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 
-const Duration = ({ route, navigation }) => {
+const TimerTab = ({ route, navigation }) => {
+  const minutes = Array.from({ length: 60 }, (_, i) => i + 1).concat(
+    Array("unlimited")
+  );
   const [selectedDuration, setSelectedDuration] = useState(1);
-  const { emotion, technique } = route.params;
-  console.log("emotion:", emotion);
 
   const handleNextPress = () => {
-    navigation.navigate("GuidedMeditationTimer", {
+    navigation.navigate("MeditationTimer", {
       duration: selectedDuration,
-      emotion,
-      technique,
     });
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={{ position: "absolute", top: 60, left: 20 }}
-        onPress={() =>
-          navigation.navigate("GuidedMeditationOptional", {
-            emotion,
-            technique,
-          })
-        }
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Ionicons
-            name="chevron-back-outline"
-            stroke={3}
-            size={28}
-            color="white"
-          />
-          <Text style={[styles.buttonText, { fontWeight: "bold" }]}>Back</Text>
-        </View>
-      </TouchableOpacity>
-      <Text style={[styles.title, { color: "white" }]}>Session Duration</Text>
+      <Text style={[styles.title, { color: "white" }]}>Meditation Timer</Text>
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedDuration}
@@ -46,8 +26,13 @@ const Duration = ({ route, navigation }) => {
           mode="dropdown"
           itemStyle={styles.pickerItem}
         >
-          {Array.from({ length: 10 }, (_, i) => i + 1).map((min) => (
-            <Picker.Item key={min} label={String(min)} value={min} />
+          {minutes.map((min) => (
+            <Picker.Item
+              key={min}
+              style={{ width: 200 }}
+              label={String(min)}
+              value={min}
+            />
           ))}
         </Picker>
         <Text style={styles.minText}>min</Text>
@@ -76,7 +61,7 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     height: 200,
-    width: 100,
+    width: 150,
   },
   minText: {
     fontSize: 16,
@@ -108,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Duration;
+export default TimerTab;

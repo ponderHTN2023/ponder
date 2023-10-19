@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "ponder",
+    "slug": "ponder",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,9 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#2A0060"
     },
+    "extra": {
+      "eas": {
+        "projectId": "112b6286-fd51-419f-8ed3-ba1deb682716"
+      }
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.seb7wake.ponder"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,5 +30,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     }
-  }
+  },
+  "owner": "seb7wake"
 }

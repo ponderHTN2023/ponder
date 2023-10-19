@@ -1,0 +1,34 @@
+{
+  "cli": {
+    "version": ">= 5.4.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "http://localhost:8000",
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "http://localhost:8000",
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "http://localhost:8000",
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

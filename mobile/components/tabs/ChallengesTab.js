@@ -35,7 +35,10 @@ export default function ChallengesTab() {
   }, []);
 
   if (challenges.length === 0) {
-    return <Loading />;
+    return;
+    <SafeAreaView style={styles.loadingContainer}>
+      <Loading />
+    </SafeAreaView>;
   }
   return (
     <View style={styles.page}>
@@ -74,5 +77,12 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: 20,
     backgroundColor: "#2A0060",
+  },
+  loadingContainer: {
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    backgroundColor: "#2A0060",
+    justifyContent: "center",
   },
 });

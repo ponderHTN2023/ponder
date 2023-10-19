@@ -15,32 +15,58 @@ import { Asset } from "expo-asset";
 import { createMeditation } from "../api/meditation";
 import Loading from "../components/Loading";
 
-const MeditationTimer = ({ route, navigation }) => {
-  const DURATION =
-    route.params?.duration === "unlimited"
-      ? "unlimited"
-      : route.params?.duration * 60 || 60;
+const GuidedMeditationTimer = ({ route, navigation }) => {
+  const DURATION = route.params?.duration * 60 || 60;
+  const emotion = route.params?.emotion;
+  const technique = route.params?.technique;
+  const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [timeSpent, setTimeSpent] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(DURATION);
   const [sound, setSound] = useState();
+  const [meditation, setMeditation] = useState();
+
+  const generateMeditation = async () => {
+    setLoading(true);
+    const response = await createMeditation({
+      duration: DURATION,
+      emotion: emotion,
+      technique: technique,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setLoading(false);
+    return response["uri"];
+  };
 
   useEffect(() => {
     const setupAudio = async () => {
       try {
-        console.log("here");
-        await loadAudio();
+        const uri = await generateMeditation();
+        console.log("uri:", uri);
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+          staysActiveInBackground: true,
+          shouldDuckAndroid: true,
+        });
+
+        const soundInstance = new Audio.Sound();
+        await soundInstance.loadAsync({
+          uri: uri,
+        });
+        console.log("soundInstance:", soundInstance);
+        setSound(soundInstance);
+        setMeditation(uri);
       } catch (error) {
         console.error("Error setting up audio:", error);
       }
     };
-    if (!sound) {
+    if (!sound && !loading) {
       setupAudio();
     }
   }, []);
 
-  const loadAudio = async () => {
+  const loadAudio = async (uri) => {
     await Audio.setAudioModeAsync({
       playsInSilentModeIOS: true,
       staysActiveInBackground: true,
@@ -48,51 +74,83 @@ const MeditationTimer = ({ route, navigation }) => {
     });
 
     const soundInstance = new Audio.Sound();
-    await soundInstance.loadAsync(
-      Asset.fromModule(require("../assets/meditation-bell.mp3"))
-    );
+    console.log("uri in loadasync:", uri);
+    await soundInstance.loadAsync({ uri: uri });
     console.log("soundInstance:", soundInstance);
     setSound(soundInstance);
+    setMeditation(uri);
   };
 
   const handlePress = async () => {
+    if (isActive) {
+      sound && (await sound.pauseAsync());
+      setIsPlaying(false);
+    } else {
+      sound && (await sound.playAsync());
+      setIsPlaying(true);
+    }
     setIsActive(!isActive);
-    setIsPlaying(!isPlaying);
   };
 
-  const playSound = async () => {
-    console.log("sound:", sound);
-    sound && (await sound.playAsync());
-    await loadAudio();
+  const finishMeditation = async () => {
+    setIsActive(false);
+    setProgress(0);
+    setRemainingTime(DURATION);
+    setIsPlaying(false);
+    // test out below for bell after meditation is complete (need to also reload meditation after bell is done playing)
+    // const soundInstance = new Audio.Sound();
+    // console.log("here in finishMeditation ");
+    // await soundInstance.loadAsync(
+    //   Asset.fromModule(require("../assets/meditation-bell.mp3"))
+    // );
+    // console.log("soundInstance:", soundInstance);
+    // setSound(soundInstance);
+    // playSound();
+    // sound && (await sound.playAsync());
+    // await loadAudio(meditation);
   };
 
   useEffect(() => {
     let interval;
-    if (isActive) {
+    if (isActive && remainingTime > 0) {
       interval = setInterval(() => {
-        setProgress((0 + timeSpent + 1) / DURATION);
-        setTimeSpent(timeSpent + 1);
+        setProgress((DURATION - remainingTime + 1) / DURATION);
+        setRemainingTime((prevTime) => prevTime - 1);
       }, 1000);
     } else {
       clearInterval(interval);
-      console.log(timeSpent, DURATION);
-    }
-    if (timeSpent === DURATION) {
-      setIsActive(false);
-      setProgress(0);
-      setTimeSpent(0);
-      setIsPlaying(false);
-      playSound();
+      if (remainingTime === 0) {
+        console.log("here");
+        finishMeditation();
+      }
     }
 
     return () => clearInterval(interval);
-  }, [isActive, timeSpent]);
+  }, [isActive, remainingTime]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <TouchableOpacity
+          style={styles.crossButton}
+          onPress={() => navigation.navigate("Home")}
+        >
+          <Text style={styles.crossButtonText}>✕</Text>
+        </TouchableOpacity>
+        <Loading
+          text={"Crafting meditation...\nThis could take up to a minute."}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  console.log("sound:", sound);
 
   return (
     <View style={styles.container}>
@@ -103,7 +161,7 @@ const MeditationTimer = ({ route, navigation }) => {
             await sound.stopAsync();
             setIsPlaying(false);
           }
-          navigation.goBack();
+          navigation.navigate("Home");
         }}
       >
         <Text style={styles.crossButtonText}>✕</Text>
@@ -114,7 +172,7 @@ const MeditationTimer = ({ route, navigation }) => {
           cy="100"
           r="95"
           stroke="#C9B0FF"
-          strokeWidth={DURATION === "unlimited" ? "0" : "10"}
+          strokeWidth="10"
           fill="#7000E0"
           strokeLinecap="round"
           transform="rotate(-90 100 100)"
@@ -133,7 +191,7 @@ const MeditationTimer = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.time}>{formatTime(timeSpent)}</Text>
+      <Text style={styles.countdown}>{formatTime(remainingTime)}</Text>
     </View>
   );
 };
@@ -145,6 +203,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#2A0060",
   },
+  timer: {
+    position: "absolute",
+  },
   loadingContainer: {
     flex: 1,
     height: "100%",
@@ -152,21 +213,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#2A0060",
     justifyContent: "center",
   },
-  timer: {
-    position: "absolute",
-    top: 275,
-  },
   button: {
     // marginTop: 10,
     position: "absolute",
-    top: 360,
-    left: 186,
+    top: 410,
+    left: 185,
     zIndex: 100,
   },
-  time: {
+  countdown: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 340,
+    marginTop: 350,
     color: "white",
   },
   crossButton: {
@@ -193,19 +250,6 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: "black",
   },
-  buttonContainer: {
-    backgroundColor: "#7000E0",
-    borderRadius: 14,
-    paddingVertical: 15,
-    paddingHorizontal: "20%",
-    alignItems: "center",
-    marginTop: 30,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
 });
 
-export default MeditationTimer;
+export default GuidedMeditationTimer;

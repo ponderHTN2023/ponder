@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import MeditationTimer from "./screens/MeditationTimer";
+import GuidedMeditationTimer from "./screens/GuidedMeditationTimer";
 import Onboarding from "./screens/Onboarding";
 import Onboarding2 from "./screens/Onboarding2";
 import Onboarding3 from "./screens/Onboarding3";
@@ -14,6 +14,8 @@ import Auth from "./screens/Auth";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import Constants from "expo-constants";
 import { StateProvider } from "./context/state";
+import MeditationDetails from "./screens/MeditationDetails";
+import MeditationTimer from "./screens/MeditationTimer";
 
 const tokenCache = {
   async getToken(key) {
@@ -34,6 +36,8 @@ const tokenCache = {
 
 const Stack = createStackNavigator();
 
+console.log("expoConfig:", Constants.expoConfig.extra);
+console.log("env:", process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default function App() {
   return (
     <ClerkProvider
@@ -52,12 +56,7 @@ export default function App() {
             </Stack.Navigator>
           </SignedOut>
           <SignedIn>
-            <Stack.Navigator initialRouteName="Auth">
-              <Stack.Screen
-                name="Auth"
-                component={Auth}
-                options={{ headerShown: false }}
-              />
+            <Stack.Navigator initialRouteName="BottomTabs">
               <Stack.Screen
                 name="Onboarding"
                 component={Onboarding}
@@ -99,9 +98,26 @@ export default function App() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
+                name="MeditationDetails"
+                component={MeditationDetails}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="GuidedMeditationTimer"
+                component={GuidedMeditationTimer}
+                options={{
+                  headerShown: false,
+                  title: "Guided Meditation Timer",
+                }}
+              />
+              <Stack.Screen
                 name="MeditationTimer"
                 component={MeditationTimer}
-                options={{ headerShown: false, title: "Meditation Timer" }}
+                options={{
+                  headerShown: false,
+                  title: "Meditation Timer",
+                  presentation: "modal",
+                }}
               />
             </Stack.Navigator>
           </SignedIn>
