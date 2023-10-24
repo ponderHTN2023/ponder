@@ -49,7 +49,6 @@ class ChallengeView(APIView):
             "Content-Type": "application/json",
             "Authorization": "Bearer " + os.environ.get("OPENAI_API_KEY"),
         }
-        import pdb; pdb.set_trace()
         try:
             res = requests.post(
                 url="https://api.openai.com/v1/chat/completions",
