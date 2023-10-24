@@ -35,10 +35,11 @@ export default function ChallengesTab() {
   }, []);
 
   if (challenges.length === 0) {
-    return;
-    <SafeAreaView style={styles.loadingContainer}>
-      <Loading />
-    </SafeAreaView>;
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <Loading text={"Generating weekly challenges..."} />
+      </SafeAreaView>
+    );
   }
   return (
     <View style={styles.page}>

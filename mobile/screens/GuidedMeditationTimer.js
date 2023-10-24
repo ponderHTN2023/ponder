@@ -16,26 +16,30 @@ import { createMeditation } from "../api/meditation";
 import Loading from "../components/Loading";
 
 const GuidedMeditationTimer = ({ route, navigation }) => {
-  const DURATION = route.params?.duration * 60 || 60;
+  const [duration, setDuration] = useState(route.params?.duration * 60 || 60);
   const emotion = route.params?.emotion;
   const technique = route.params?.technique;
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(DURATION);
+  const [remainingTime, setRemainingTime] = useState(duration);
   const [sound, setSound] = useState();
   const [meditation, setMeditation] = useState();
 
   const generateMeditation = async () => {
     setLoading(true);
-    const response = await createMeditation({
-      duration: DURATION,
-      emotion: emotion,
-      technique: technique,
-    });
+    let response = { uri: "" };
+    try {
+      response = await createMeditation({
+        duration: duration,
+        emotion: emotion,
+        technique: technique,
+      });
+    } catch (error) {
+      console.error("Error generating meditation:", error);
+    }
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    setLoading(false);
     return response["uri"];
   };
 
@@ -54,7 +58,19 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         await soundInstance.loadAsync({
           uri: uri,
         });
+        soundInstance
+          .getStatusAsync()
+          .then((res) => {
+            console.log("res:", res.durationMillis);
+            const seconds = Math.floor(res.durationMillis / 1000);
+            setDuration(seconds);
+            setRemainingTime(seconds);
+          })
+          .catch((err) => {
+            console.log("err:", err);
+          });
         console.log("soundInstance:", soundInstance);
+        setLoading(false);
         setSound(soundInstance);
         setMeditation(uri);
       } catch (error) {
@@ -65,21 +81,6 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       setupAudio();
     }
   }, []);
-
-  const loadAudio = async (uri) => {
-    await Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: true,
-      shouldDuckAndroid: true,
-    });
-
-    const soundInstance = new Audio.Sound();
-    console.log("uri in loadasync:", uri);
-    await soundInstance.loadAsync({ uri: uri });
-    console.log("soundInstance:", soundInstance);
-    setSound(soundInstance);
-    setMeditation(uri);
-  };
 
   const handlePress = async () => {
     if (isActive) {
@@ -92,10 +93,37 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
     setIsActive(!isActive);
   };
 
+  const loadAudio = async (uri) => {
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: true,
+      shouldDuckAndroid: true,
+    });
+
+    const soundInstance = new Audio.Sound();
+    await soundInstance.loadAsync({
+      uri: uri,
+    });
+    soundInstance
+      .getStatusAsync()
+      .then((res) => {
+        console.log("res:", res.durationMillis);
+        const seconds = Math.floor(res.durationMillis / 1000);
+        setDuration(seconds);
+        setRemainingTime(seconds);
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
+    console.log("soundInstance:", soundInstance);
+    setLoading(false);
+    setSound(soundInstance);
+  };
+
   const finishMeditation = async () => {
     setIsActive(false);
     setProgress(0);
-    setRemainingTime(DURATION);
+    setRemainingTime(duration);
     setIsPlaying(false);
     // test out below for bell after meditation is complete (need to also reload meditation after bell is done playing)
     // const soundInstance = new Audio.Sound();
@@ -105,16 +133,15 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
     // );
     // console.log("soundInstance:", soundInstance);
     // setSound(soundInstance);
-    // playSound();
-    // sound && (await sound.playAsync());
-    // await loadAudio(meditation);
+    // soundInstance && (await soundInstance.playAsync());
+    await loadAudio(meditation);
   };
 
   useEffect(() => {
     let interval;
     if (isActive && remainingTime > 0) {
       interval = setInterval(() => {
-        setProgress((DURATION - remainingTime + 1) / DURATION);
+        setProgress((duration - remainingTime + 1) / duration);
         setRemainingTime((prevTime) => prevTime - 1);
       }, 1000);
     } else {

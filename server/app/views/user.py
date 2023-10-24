@@ -1,12 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from app.models import User
+from app.models import User, UserProfile
 from django.forms.models import model_to_dict
 
 
 class UserView(APIView):
     def get(self, request, email, format=None):
-        user = User.objects.get(email=email)
+        user = UserProfile.objects.get(email=email)
         return Response(model_to_dict(user))
     
     def post(self, request, format=None):
@@ -20,4 +20,5 @@ class UserView(APIView):
             username=request.data["email"],
             email=request.data["email"],
         )
-        return Response(model_to_dict(user))
+        user_profile = UserProfile.objects.create(user=user, name=request.data["name"], email=request.data["email"])
+        return Response(model_to_dict(user_profile))

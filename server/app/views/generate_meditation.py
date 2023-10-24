@@ -10,6 +10,8 @@ import nltk
 import numpy as np
 import time
 
+# 1 min = 800 chars
+
 
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
@@ -20,8 +22,8 @@ class GenerateMeditationView(APIView):
 
     def generate_meditations(self, data):
         divisor = (10 + (data['duration']//60)*2) if data['duration'] > 60 else 10
-        if (data['duration']//60) > 5:
-            divisor = (14 + (data['duration']//60)*2)
+        if (data['duration']//60) >= 5:
+            divisor = (12 + (data['duration']//60)*2)
         num_lines = data['duration']//divisor
         if data.get("emotion") and not data.get("technique"):
             prompt = self.prompt_5(data, num_lines)
@@ -46,6 +48,7 @@ class GenerateMeditationView(APIView):
             return {
                 "error": "Sorry, I couldn't generate a meditation for you. Please try again."
             }
+        print("response length:", len(res))
         return res + " The guru is within you."
     
     def prompt_1(self, data, num_lines):
@@ -77,33 +80,36 @@ class GenerateMeditationView(APIView):
         return prompt
     
     def prompt_4(self, data, num_lines):
-        chars = num_lines * 70
-        prompt = f"I want you to act as a meditation guru. Create a guided {data.get('technique')} meditation. Aim for a total of {chars} characters. \nBegin with an introductory sentence, and then guide the listener deeper into the meditation. Each sentence should be on a new line i.e. the format of the output is:\nExample sentence.\nFollowed by another guiding sentence.\nAnd then another sentence.\n"
+        chars = num_lines * 60
+        prompt = f"I want you to act as a meditation guru. Create a guided {data.get('technique')} meditation. Aim for a total of {num_lines} sentences. \nBegin with an introductory sentence, and then guide the listener deeper into the meditation. Each sentence should be on a new line i.e. the format of the output is:\nExample sentence.\nFollowed by another guiding sentence.\nAnd then another sentence.\n"
         return prompt
     
     def prompt_5(self, data, num_lines):
-        chars = num_lines * 70
+        chars = num_lines * 60
         prompt = f"""
-        As an experienced meditation guru, craft a unique guided meditation script tailored to the emotion: {data.get('emotion')}. 
-        Aim for a total of {chars} characters, and structure the script with each sentence on a new line.  
-        The format of the output is\nExample sentence.\nFollowed by another guiding sentence.\nAnd then another sentence.\n
-        Begin with an introductory sentence that acknowledges the current emotion. 
-        Then, guide the listener progressively deeper into the meditation, ensuring each instruction or statement is diverse and creative. 
-        Conclude with a comforting or empowering sentiment.
-        Avoid excessive imagery and select the most fitting meditation technique from the list provided below, aligning with the emotion at hand.
-        Meditation Techniques:
+        Craft a unique guided meditation script focused on the emotion: {data.get('emotion')}. 
+        The script should consist of around {num_lines} sentences, including spaces and punctuation.
+
+        Structure:
+        - Begin each sentence on a new line using.
+        - Start with an introduction that acknowledges the specified emotion.
+        - Progressively guide the listener deeper into the meditation with diverse and creative instructions or statements.
+        - Conclude with a comforting or empowering sentiment.
+
+        Guidelines:
+        - Ensure the script is around {num_lines} sentences long.
+        - Choose only one meditation technique from the provided list, ensuring it aligns with the specified emotion.
+        - Avoid overusing imagery and ensure the selected technique fits appropriately.
+
+        Meditation Techniques to Choose From:
         - Breath awareness
         - Body scan
         - Mindfulness meditation
-        - Mindful walking
         - Loving-kindness
         - Zen meditation
-        - Concentration Meditation
-        - Cleaning (heartfulness)
         - Transcendental
         - Heartfulness
         - Chakra meditation
-        - Fixed Gaze meditation
         - Yoga Nidra
         - Tonglen meditation (compassion)
         - Visualization
@@ -114,19 +120,22 @@ class GenerateMeditationView(APIView):
         - Kriya meditation
         - Kundalini meditation
         - Shikantaza (Just Sitting)
-        - Dzogchen
         - Ajapa Japa (mantra)
         - Spinal breathing
-        - Mahamudra
-        - Anapasati
-        - Merkaba Meditation
+
+        Example Format:
+        Sentence acknowledging the emotion.
+        Next guiding sentence.
+        Another guiding instruction.
+        Comforting or empowering concluding sentence.
+
+        Please ensure the script aligns with the specified emotion and chosen meditation technique, and follows the format and character count requirements.
         """
-        # prompt = f"I want you to act as a meditation guru. Create a personlized guided meditation for me. I am currently feeling {data.get('emotion')} today. Aim for a total of {chars} characters. Each sentence should be on a new line. \nBegin with an introductory sentence, and then guide the listener deeper into the meditation.\nExample sentence.\nFollowed by another guiding sentence.\nAnd then another sentence.\n"
         return prompt
     
     def prompt_6(self, data, num_lines):
-        chars = num_lines * 70
-        base_prompt = f"Craft a guided meditation. Aim for a total of {chars} characters, and structure the script with each sentence on a new line, tailored to the participant's emotions and context.\n"
+        chars = num_lines * 60
+        base_prompt = f"Craft a guided meditation. Aim for a total of {num_lines} sentences, and structure the script with each sentence on a new line, tailored to the participant's emotions and context.\n"
         
         # Duration
         duration_info = f"Duration: {data.get('duration', 'Not specified')} seconds\n" if data.get("duration") else ""

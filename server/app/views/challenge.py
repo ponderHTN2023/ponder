@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from app.models import Challenge, User
+from app.models import Challenge, UserProfile
 import requests
 
 import json
@@ -9,7 +9,7 @@ import os
 
 class ChallengeView(APIView):
     def get(self, request, id, format=None):
-        user = User.objects.get(id=id)
+        user = UserProfile.objects.get(id=id)
         challenges = Challenge.objects.filter(user=user).filter(active=True)
         curr_challenges = challenges.values() if challenges else []
         if challenges.filter(completed=True).count() == len(challenges):
@@ -37,16 +37,6 @@ class ChallengeView(APIView):
             self.process_results(challenges, user)
             return Response({"reset": True, "message": "success"})
         return Response({"reset": False, "message": "success"})
-    
-    def get_or_create_first_user(self):
-        users = User.objects.all()
-        if not users:
-            User.objects.create_user(
-                username="admin",
-                email="admin@admin.com",
-            )
-            users = User.objects.all()
-        return users.first()
 
     def generate_challenges(self, challenges):
         prompt = 'Generate 5 unique mindfulness and kindfulness challenges that foster a healthy relationship with oneself and others, promoting presence in daily life. Output the challenges as a raw JSON object list with no extra characters or formatting. Each key represents the title of the challenge, and the value is the challenge description. Example: [{"Mindfulness Walk": "example text"}].\n\nAvoid repeating the following challenges:[' + ''.join(
@@ -59,6 +49,7 @@ class ChallengeView(APIView):
             "Content-Type": "application/json",
             "Authorization": "Bearer " + os.environ.get("OPENAI_API_KEY"),
         }
+        import pdb; pdb.set_trace()
         try:
             res = requests.post(
                 url="https://api.openai.com/v1/chat/completions",
