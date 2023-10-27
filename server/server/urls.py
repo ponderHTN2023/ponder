@@ -1,32 +1,18 @@
-"""server URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.urls import path
 from rest_framework import routers
-from app.views import GenerateMeditationView, ChallengeView, JournalsView, UserView
+from app.views import GenerateMeditationView, ChallengeView, UserActivityView, ActivityDetailView, UserView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/meditation", GenerateMeditationView.as_view(), name="generate"),
     path("api/challenges/<int:id>", ChallengeView.as_view(), name="update_challenge"),
     path("api/users/<int:id>/challenges/", ChallengeView.as_view(), name="challenges"),
-    path("api/journals/<int:id>", JournalsView.as_view(), name="update_journal"),
-    path("api/journals/", JournalsView.as_view(), name="journals"),
+    path("api/activities/", UserActivityView.as_view(), name="create_activity"),
+    path("api/activities/<int:id>", UserActivityView.as_view(), name="user_activities"),
+    path("api/activity/<int:id>", ActivityDetailView.as_view(), name="activity_detail"),
     path("api/users/<str:email>", UserView.as_view(), name="get_user"),
     path("api/users/", UserView.as_view(), name="create_user")
-
 ]

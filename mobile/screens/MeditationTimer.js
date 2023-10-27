@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Button,
@@ -12,7 +12,8 @@ import {
 import { Circle, Svg } from "react-native-svg";
 import { Audio } from "expo-av";
 import { Asset } from "expo-asset";
-import { createMeditation } from "../api/meditation";
+import { saveMeditation } from "../api/meditation";
+import { StateContext } from "../context/state";
 import Loading from "../components/Loading";
 
 const MeditationTimer = ({ route, navigation }) => {
@@ -20,6 +21,7 @@ const MeditationTimer = ({ route, navigation }) => {
     route.params?.duration === "unlimited"
       ? "unlimited"
       : route.params?.duration * 60 || 60;
+  const [user, setUser] = useContext(StateContext);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [timeSpent, setTimeSpent] = useState(0);
@@ -79,6 +81,7 @@ const MeditationTimer = ({ route, navigation }) => {
     }
     if (timeSpent === DURATION) {
       setIsActive(false);
+      trackMeditation();
       setProgress(0);
       setTimeSpent(0);
       setIsPlaying(false);
@@ -94,18 +97,29 @@ const MeditationTimer = ({ route, navigation }) => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  const trackMeditation = async () => {
+    if (timeSpent > 0) {
+      const activity = {
+        duration: timeSpent,
+        name: "guided",
+      };
+      console.log("activity:", activity);
+      saveMeditation(user.id, activity);
+    }
+  };
+
+  const exit = async () => {
+    if (sound) {
+      await sound.stopAsync();
+      setIsPlaying(false);
+      trackMeditation;
+    }
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.crossButton}
-        onPress={async () => {
-          if (sound) {
-            await sound.stopAsync();
-            setIsPlaying(false);
-          }
-          navigation.goBack();
-        }}
-      >
+      <TouchableOpacity style={styles.crossButton} onPress={exit}>
         <Text style={styles.crossButtonText}>✕</Text>
       </TouchableOpacity>
       <Svg width="200" height="200" style={styles.timer} viewBox="0 0 200 200">

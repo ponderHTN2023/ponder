@@ -39,3 +39,20 @@ class Journal(models.Model):
 
     def __str__(self):
         return self.title
+
+class Activity(models.Model):
+    id = models.AutoField(primary_key=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=50)
+    duration = models.IntegerField()
+    uri = models.CharField(max_length=225, blank=True, null=True)
+    emotion = models.TextField(blank=True, null=True)
+    technique = models.CharField(max_length=50, blank=True, null=True)
+    user = models.ForeignKey(UserProfile, related_name="activities", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.name

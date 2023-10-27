@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Button,
@@ -12,13 +12,14 @@ import {
 import { Circle, Svg } from "react-native-svg";
 import { Audio } from "expo-av";
 import { Asset } from "expo-asset";
-import { createMeditation } from "../api/meditation";
+import { StateContext } from "../context/state";
+import { createMeditation, saveMeditation } from "../api/meditation";
 import Loading from "../components/Loading";
 
 const GuidedMeditationTimer = ({ route, navigation }) => {
   const [duration, setDuration] = useState(route.params?.duration * 60 || 60);
-  const emotion = route.params?.emotion;
-  const technique = route.params?.technique;
+  const { emotion, technique } = route.params;
+  const [user, setUser] = useContext(StateContext);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -26,6 +27,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
   const [remainingTime, setRemainingTime] = useState(duration);
   const [sound, setSound] = useState();
   const [meditation, setMeditation] = useState();
+  const [meditationUri, setMeditationUri] = useState();
 
   const generateMeditation = async () => {
     setLoading(true);
@@ -48,6 +50,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       try {
         const uri = await generateMeditation();
         console.log("uri:", uri);
+        setMeditationUri(uri);
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           staysActiveInBackground: true,
@@ -58,6 +61,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         await soundInstance.loadAsync({
           uri: uri,
         });
+        console.log("soundInstance:", soundInstance);
         soundInstance
           .getStatusAsync()
           .then((res) => {
@@ -148,6 +152,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       clearInterval(interval);
       if (remainingTime === 0) {
         console.log("here");
+        trackMeditation();
         finishMeditation();
       }
     }
@@ -159,6 +164,30 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const trackMeditation = () => {
+    if (duration - remainingTime > 0) {
+      const activity = {
+        emotion: emotion,
+        technique: technique,
+        uri: meditationUri,
+        duration: duration - remainingTime,
+        name: "guided",
+      };
+      console.log("activity:", activity);
+      saveMeditation(user.id, activity);
+    }
+  };
+
+  const exit = async () => {
+    if (sound) {
+      await sound.stopAsync();
+      setIsPlaying(false);
+      console.log(duration - remainingTime);
+      trackMeditation();
+    }
+    navigation.navigate("Home");
   };
 
   if (loading) {
@@ -177,20 +206,9 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
     );
   }
 
-  console.log("sound:", sound);
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.crossButton}
-        onPress={async () => {
-          if (sound) {
-            await sound.stopAsync();
-            setIsPlaying(false);
-          }
-          navigation.navigate("Home");
-        }}
-      >
+      <TouchableOpacity style={styles.crossButton} onPress={exit}>
         <Text style={styles.crossButtonText}>✕</Text>
       </TouchableOpacity>
       <Svg width="200" height="200" style={styles.timer} viewBox="0 0 200 200">

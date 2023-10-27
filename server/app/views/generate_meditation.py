@@ -81,7 +81,17 @@ class GenerateMeditationView(APIView):
     
     def prompt_4(self, data, num_lines):
         chars = num_lines * 60
-        prompt = f"I want you to act as a meditation guru. Create a guided {data.get('technique')} meditation. Aim for a total of {num_lines} sentences. \nBegin with an introductory sentence, and then guide the listener deeper into the meditation. Each sentence should be on a new line i.e. the format of the output is:\nExample sentence.\nFollowed by another guiding sentence.\nAnd then another sentence.\n"
+        prompt = (f"As a meditation guide specialized in {data.get('technique')}, "
+          "craft a detailed script for a session. "
+          f"Your script should be comprised of {num_lines} thoughtfully constructed sentences.\n"
+          "Begin with an engaging introduction that eases the participant into the meditation, "
+          "gradually guide them through the stages or steps typical of the {data.get('technique')} technique, "
+          "and conclude with a gentle closure that leaves the participant in a state of calm and mindfulness.\n"
+          "Ensure that each instruction or sentence is presented on a new line, adhering to the following format:\n"
+          "Example introductory sentence.\n"
+          "Followed by a technique-focused guiding sentence.\n"
+          "Concluding with a soothing closing sentence.\n"
+          "Remember, each sentence should vividly embody the essence and uniqueness of the {data.get('technique')} meditation technique.")
         return prompt
     
     def prompt_5(self, data, num_lines):
@@ -91,37 +101,14 @@ class GenerateMeditationView(APIView):
         The script should consist of around {num_lines} sentences, including spaces and punctuation.
 
         Structure:
-        - Begin each sentence on a new line using.
+        - Begin each sentence on a new line using at most {num_lines} sentences.
         - Start with an introduction that acknowledges the specified emotion.
         - Progressively guide the listener deeper into the meditation with diverse and creative instructions or statements.
         - Conclude with a comforting or empowering sentiment.
 
         Guidelines:
         - Ensure the script is around {num_lines} sentences long.
-        - Choose only one meditation technique from the provided list, ensuring it aligns with the specified emotion.
         - Avoid overusing imagery and ensure the selected technique fits appropriately.
-
-        Meditation Techniques to Choose From:
-        - Breath awareness
-        - Body scan
-        - Mindfulness meditation
-        - Loving-kindness
-        - Zen meditation
-        - Transcendental
-        - Heartfulness
-        - Chakra meditation
-        - Yoga Nidra
-        - Tonglen meditation (compassion)
-        - Visualization
-        - Self-Reflection
-        - Jyoti Meditation
-        - Vipassana
-        - Samaya meditation
-        - Kriya meditation
-        - Kundalini meditation
-        - Shikantaza (Just Sitting)
-        - Ajapa Japa (mantra)
-        - Spinal breathing
 
         Example Format:
         Sentence acknowledging the emotion.
@@ -129,30 +116,45 @@ class GenerateMeditationView(APIView):
         Another guiding instruction.
         Comforting or empowering concluding sentence.
 
-        Please ensure the script aligns with the specified emotion and chosen meditation technique, and follows the format and character count requirements.
+        Please ensure the script aligns with the specified emotion and stays consistent with the meditation technique, and follows the format and sentences count requirements.
         """
         return prompt
     
     def prompt_6(self, data, num_lines):
-        chars = num_lines * 60
-        base_prompt = f"Craft a guided meditation. Aim for a total of {num_lines} sentences, and structure the script with each sentence on a new line, tailored to the participant's emotions and context.\n"
+        chars = num_lines * 60  # character count remains the same
+    
+        # Base Prompt: Clear instruction for the task
+        base_prompt = ("Create a unique guided meditation script. "
+                    f"Aim for {num_lines} sentences, each on a new line, "
+                    "carefully attuned to the participant's emotions and context.\n")
         
-        # Duration
-        duration_info = f"Duration: {data.get('duration', 'Not specified')} seconds\n" if data.get("duration") else ""
+        # Duration: Specifying the length of the meditation session
+        duration_info = ("Duration: "
+                        f"{data.get('duration', 'Not specified')} seconds\n"
+                        if data.get("duration") else "")
         
-        # Meditation Type
-        technique_info = f"Meditation Type: {data.get('technique', 'Not specified')}\n" if data.get("technique") else ""
+        # Meditation Type: Indicating the specific technique to be used
+        technique_info = ("Meditation Type: "
+                        f"{data.get('technique', 'Not specified')}\n"
+                        if data.get("technique") else "")
         
-        # Emotion
-        emotion_info = f"Emotion: {data.get('emotion', 'Not specified')}\n" if data.get("emotion") else ""
+        # Emotion: Clarifying the emotional focus of the meditation
+        emotion_info = ("Emotion: "
+                        f"{data.get('emotion', 'Not specified')}\n"
+                        if data.get("emotion") else "")
         
-        # Example structure
-        example_format = "Format your output like this:\nExample sentence.\nAnother sentence.\n"
+        # Example Structure: Providing a template for the output
+        example_format = ("Ensure your script follows this structure:\n"
+                        "1. Begin with a grounding introduction.\n"
+                        "2. Progress with calming and focused guidance.\n"
+                        "3. Conclude with a peaceful and reassuring sentiment.\n"
+                        "Example: \n"
+                        "Begin with a deep breath in.\n"
+                        "Feel the energy entering your body.\n")
         
-        # Constructing the final prompt
-        prompt = base_prompt + duration_info + technique_info + emotion_info + example_format
+        # Constructing the Final Prompt: Combining all elements coherently
+        return base_prompt + duration_info + technique_info + emotion_info + example_format
 
-        return prompt
     
     def get_json(self, prompt):
         return {
