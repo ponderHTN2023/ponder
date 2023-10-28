@@ -122,38 +122,27 @@ class GenerateMeditationView(APIView):
     
     def prompt_6(self, data, num_lines):
         chars = num_lines * 60  # character count remains the same
-    
-        # Base Prompt: Clear instruction for the task
-        base_prompt = ("Create a unique guided meditation script. "
-                    f"Aim for {num_lines} sentences, each on a new line, "
-                    "carefully attuned to the participant's emotions and context.\n")
-        
-        # Duration: Specifying the length of the meditation session
-        duration_info = ("Duration: "
-                        f"{data.get('duration', 'Not specified')} seconds\n"
-                        if data.get("duration") else "")
-        
-        # Meditation Type: Indicating the specific technique to be used
-        technique_info = ("Meditation Type: "
-                        f"{data.get('technique', 'Not specified')}\n"
-                        if data.get("technique") else "")
-        
-        # Emotion: Clarifying the emotional focus of the meditation
-        emotion_info = ("Emotion: "
-                        f"{data.get('emotion', 'Not specified')}\n"
-                        if data.get("emotion") else "")
-        
-        # Example Structure: Providing a template for the output
-        example_format = ("Ensure your script follows this structure:\n"
-                        "1. Begin with a grounding introduction.\n"
-                        "2. Progress with calming and focused guidance.\n"
-                        "3. Conclude with a peaceful and reassuring sentiment.\n"
-                        "Example: \n"
-                        "Begin with a deep breath in.\n"
-                        "Feel the energy entering your body.\n")
-        
-        # Constructing the Final Prompt: Combining all elements coherently
-        return base_prompt + duration_info + technique_info + emotion_info + example_format
+        return f"""
+        As a meditation architect, your task is to weave a transformative guided meditation script. This script should resonate with the emotion: {data.get('emotion')}, employing the meditation technique: {data.get('technique')}. Aim to compose a script of about {num_lines} sentences, each sentence embodying a breath of clarity and focus.
+
+        **Structural Flow:**
+        - Commence with an introduction that gently acknowledges and embraces the specified emotion.
+        - Unfold the meditation journey with a variety of authentic and creative directives, aligning with the chosen technique.
+        - Culminate the session with a warm, reassuring sentiment that empowers and comforts the meditator.
+
+        **Craftsmanship Guidelines:**
+        - Tailor each sentence with care and precision, adhering to the limit of {num_lines} sentences.
+        - Navigate the landscape of imagery with balance, ensuring its use complements rather than overwhelms the meditation experience.
+        - Harmonize the essence of the selected technique with the emotional theme, cultivating a congruent meditation flow.
+
+        **Example Blueprint:**
+        An empathetic sentence acknowledging the emotion.
+        A guiding statement that gently leads into the meditation technique.
+        Continuous, fluid instructions that deepen the meditation experience.
+        A closing sentiment that blankets the meditator with comfort and empowerment.
+
+        Embark on this creative journey with mindfulness, ensuring your script is a luminous guide that aligns harmoniously with the specified emotion and meditation technique, fulfilling the format and sentence count requisites.
+        """
 
     
     def get_json(self, prompt):

@@ -20,6 +20,7 @@ import Loading from "../components/Loading";
 import ExploreTab from "../components/tabs/ExploreTab";
 import TimerTab from "../components/tabs/TimerTab";
 import { MaterialIcons } from "@expo/vector-icons";
+import ProfileTab from "../components/tabs/ProfileTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +41,12 @@ export default function BottomTabs() {
     setUser({
       id: res.data["id"],
       email: res.data["email"],
-      name: res.data["first_name"],
+      name: res.data["name"],
+      createdAt: res.data["created_at"],
+      minMeditated: res.data["min_meditated"] || 0,
+      numMeditations: res.data["num_meditations"] || 0,
+      avgDuration: res.data["avg_duration"] || 0,
+      sessions: res.data["sessions"] || [],
     });
   };
 
@@ -119,7 +125,7 @@ export default function BottomTabs() {
             tabBarLabelStyle: styles.tabBarLabel,
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Explore"
           component={ExploreTab}
           options={{
@@ -129,6 +135,22 @@ export default function BottomTabs() {
                 ? require("../assets/yoga-selected.png")
                 : require("../assets/yoga.png");
               return <Image source={image} style={styles.meditateIcon} />;
+            },
+            headerShown: false,
+            tabBarStyle: { backgroundColor: "#2A0060" },
+            tabBarLabelStyle: styles.tabBarLabel,
+          }}
+        /> */}
+        <Tab.Screen
+          name="Profile"
+          component={ProfileTab}
+          options={{
+            tabBarLabel: "Profile",
+            tabBarIcon: ({ focused }) => {
+              const image = focused
+                ? require("../assets/profile-selected.png")
+                : require("../assets/profile.png");
+              return <Image source={image} style={styles.profileIcon} />;
             },
             headerShown: false,
             tabBarStyle: { backgroundColor: "#2A0060" },
@@ -164,6 +186,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     width: 22,
     height: 22,
+  },
+  profileIcon: {
+    marginTop: 9,
+    marginBottom: 5,
+    width: 24,
+    height: 24,
   },
   loadingContainer: {
     flex: 1,

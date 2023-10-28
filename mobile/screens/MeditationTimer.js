@@ -103,6 +103,22 @@ const MeditationTimer = ({ route, navigation }) => {
         duration: timeSpent,
         name: "guided",
       };
+      setUser({
+        ...user,
+        minMeditated: user.minMeditated + timeSpent,
+        numMeditations: user.numMeditations + 1,
+        avgDuration:
+          (user.avgDuration * user.numMeditations + timeSpent) /
+          (user.numMeditations + 1),
+        sessions: [
+          {
+            ...activity,
+            id: user.sessions.length + 1,
+            created_at: new Date().toISOString(),
+          },
+          ...user.sessions,
+        ],
+      });
       console.log("activity:", activity);
       saveMeditation(user.id, activity);
     }
@@ -112,7 +128,7 @@ const MeditationTimer = ({ route, navigation }) => {
     if (sound) {
       await sound.stopAsync();
       setIsPlaying(false);
-      trackMeditation;
+      trackMeditation();
     }
     navigation.goBack();
   };

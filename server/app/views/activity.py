@@ -1,6 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from app.models import Activity, UserProfile
+from rest_framework import serializers
+
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = '__all__'
 
 
 class UserActivityView(APIView):

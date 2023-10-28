@@ -175,6 +175,24 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         duration: duration - remainingTime,
         name: "guided",
       };
+      setUser({
+        ...user,
+        minMeditated: user.minMeditated + (duration - remainingTime),
+        numMeditations: user.numMeditations + 1,
+        avgDuration: Math.floor(
+          (user.avgDuration * user.numMeditations +
+            (duration - remainingTime)) /
+            (user.numMeditations + 1)
+        ),
+        sessions: [
+          {
+            ...activity,
+            id: user.sessions.length + 1,
+            created_at: new Date().toISOString(),
+          },
+          ...user.sessions,
+        ],
+      });
       console.log("activity:", activity);
       saveMeditation(user.id, activity);
     }
