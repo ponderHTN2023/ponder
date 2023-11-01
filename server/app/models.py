@@ -58,3 +58,29 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.name
+
+class Community(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=50)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    banner_image = models.CharField(max_length=225, blank=True, null=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
+
+class CommunityUser(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(UserProfile, related_name="community_users", on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, related_name="community_users", on_delete=models.CASCADE)
+    status = models.CharField(max_length=50, default="joined")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.user.name + " - " + self.community.title

@@ -11,20 +11,38 @@ import {
 import { StateContext } from "../../context/state";
 import { Ionicons } from "@expo/vector-icons";
 import SessionCard from "../SessionCard";
+import { useAuth } from "@clerk/clerk-react";
 
 const ProfileTab = ({ route, navigation }) => {
   const [user, setUser] = useContext(StateContext);
-  const [selectedDuration, setSelectedDuration] = useState(1);
+  const { signOut, sessionId, getToken } = useAuth();
   const memberSince =
     user.createdAt.split("-")[2].split("T")[0] +
     "/" +
     user.createdAt.split("-")[1] +
     "/" +
     user.createdAt.split("-")[0];
-  console.log(user.sessions);
+
+  const onSignOut = async () => {
+    setUser(null);
+    await signOut();
+    console.log("signed out!");
+    navigation.navigate("Auth");
+  };
 
   return (
     <ScrollView style={styles.page}>
+      <View
+        style={{
+          alignItems: "flex-end",
+          marginTop: 16,
+          marginRight: 24,
+        }}
+      >
+        <TouchableOpacity onPress={onSignOut}>
+          <Text style={{ fontSize: 14, color: "#C9B0FF" }}>Log Out</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
         <View style={styles.header}>
           <Image
@@ -50,7 +68,10 @@ const ProfileTab = ({ route, navigation }) => {
             <Text style={styles.statTitle}>Avg Duration</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => navigation.navigate("ManualMeditation")}
+        >
           <Text style={styles.buttonText}>Add Meditation Manually +</Text>
         </TouchableOpacity>
         <View>
@@ -64,7 +85,7 @@ const ProfileTab = ({ route, navigation }) => {
                 duration={item.duration}
                 emotion={item.emotion}
                 technique={item.technique}
-                description={item.content}
+                description={item.description}
               />
             ))}
           </View>
@@ -98,7 +119,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
     marginBottom: 36,
-    marginTop: 72,
+    marginTop: 36,
   },
   logo: {
     width: 100,

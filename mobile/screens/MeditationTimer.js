@@ -101,7 +101,7 @@ const MeditationTimer = ({ route, navigation }) => {
     if (timeSpent > 0) {
       const activity = {
         duration: timeSpent,
-        name: "guided",
+        name: "Unguided",
       };
       setUser({
         ...user,

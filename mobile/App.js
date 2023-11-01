@@ -16,6 +16,7 @@ import Constants from "expo-constants";
 import { StateProvider } from "./context/state";
 import MeditationDetails from "./screens/MeditationDetails";
 import MeditationTimer from "./screens/MeditationTimer";
+import ManualMeditation from "./screens/ManualMeditation";
 
 const tokenCache = {
   async getToken(key) {
@@ -116,6 +117,14 @@ export default function App() {
                 options={{
                   headerShown: false,
                   title: "Meditation Timer",
+                  presentation: "modal",
+                }}
+              />
+              <Stack.Screen
+                name="ManualMeditation"
+                component={ManualMeditation}
+                options={{
+                  headerShown: false,
                   presentation: "modal",
                 }}
               />

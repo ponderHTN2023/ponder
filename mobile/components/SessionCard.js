@@ -18,13 +18,34 @@ const SessionCard = ({
   name,
   duration,
 }) => {
-  console.log(date);
   const formattedDate =
     date.split("-")[2].split("T")[0] +
     "-" +
     date.split("-")[1] +
     "-" +
     date.split("-")[0];
+
+  const formattedEmotion = () => {
+    if (emotion) {
+      if (emotion.length > 15) {
+        return emotion.substr(0, 15) + "\u2026";
+      } else {
+        return emotion;
+      }
+    }
+    return "N/A";
+  };
+
+  const formattedTechnique = () => {
+    if (technique) {
+      if (technique.length > 15) {
+        return technique.substr(0, 15) + "\u2026";
+      } else {
+        return technique;
+      }
+    }
+    return "N/A";
+  };
 
   const formattedDuration = () => {
     const minutes = Math.floor(duration / 60);
@@ -39,12 +60,12 @@ const SessionCard = ({
       <View style={styles.infoContainer}>
         <View style={styles.section}>
           <Text style={styles.infoTitle}>Emotion</Text>
-          <Text style={styles.infoValue}>{emotion || "N/A"}</Text>
+          <Text style={styles.infoValue}>{formattedEmotion()}</Text>
         </View>
         <View style={styles.divider}></View>
         <View style={styles.section}>
           <Text style={styles.infoTitle}>Technique</Text>
-          <Text style={styles.infoValue}>{technique || "N/A"}</Text>
+          <Text style={styles.infoValue}>{formattedTechnique()}</Text>
         </View>
         <View style={styles.divider}></View>
         <View style={styles.section}>
@@ -100,10 +121,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "white",
+    alignItems: "center",
   },
   cardDescription: {
     fontSize: 16,
-    marginBottom: 24,
+    marginBottom: 16,
     color: "white",
     textAlign: "left",
   },

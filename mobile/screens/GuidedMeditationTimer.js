@@ -173,7 +173,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         technique: technique,
         uri: meditationUri,
         duration: duration - remainingTime,
-        name: "guided",
+        name: "Guided",
       };
       setUser({
         ...user,

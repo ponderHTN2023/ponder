@@ -69,7 +69,7 @@ export default function BottomTabs() {
           name="Home"
           component={HomeTab}
           options={{
-            tabBarLabel: "Home",
+            tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
               const image = focused
                 ? require("../assets/home-selected.png")
@@ -85,19 +85,19 @@ export default function BottomTabs() {
           name="Timer"
           component={TimerTab}
           options={{
-            tabBarLabel: "Timer",
+            tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
               const image = focused ? (
                 <MaterialIcons
                   name="timer"
-                  style={{ marginTop: 5, paddingBottom: 5 }}
+                  style={{ marginTop: 9 }}
                   size={30}
                   color="#C9B0FF"
                 />
               ) : (
                 <MaterialIcons
                   name="timer"
-                  style={{ marginTop: 5, paddingBottom: 5 }}
+                  style={{ marginTop: 9 }}
                   size={30}
                   color="white"
                 />
@@ -113,7 +113,7 @@ export default function BottomTabs() {
           name="Challenges"
           component={ChallengesTab}
           options={{
-            tabBarLabel: "Challenges",
+            tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
               const image = focused
                 ? require("../assets/checkmark-selected.png")
@@ -145,7 +145,7 @@ export default function BottomTabs() {
           name="Profile"
           component={ProfileTab}
           options={{
-            tabBarLabel: "Profile",
+            tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {
               const image = focused
                 ? require("../assets/profile-selected.png")
@@ -171,27 +171,23 @@ const styles = StyleSheet.create({
   },
   homeIcon: {
     marginTop: 9,
-    marginBottom: 5,
     width: 24,
     height: 24,
   },
   meditateIcon: {
     marginTop: 9,
-    marginBottom: 5,
     width: 17,
     height: 24,
   },
   challengeIcon: {
     marginTop: 9,
-    marginBottom: 5,
     width: 22,
     height: 22,
   },
   profileIcon: {
     marginTop: 9,
-    marginBottom: 5,
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
   },
   loadingContainer: {
     flex: 1,

@@ -9,7 +9,6 @@ import { StateContext } from "../../context/state";
 export default function HomeTab() {
   const navigation = useNavigation();
   const [user, setUser] = useContext(StateContext);
-  const { signOut, sessionId, getToken } = useAuth();
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString("en-US", {
     weekday: "short",
@@ -17,24 +16,11 @@ export default function HomeTab() {
     day: "numeric",
   });
 
-  const onSignOut = async () => {
-    setUser(null);
-    await signOut();
-    console.log("signed out!");
-    navigation.navigate("Auth");
-  };
-
   return (
     <View style={styles.page}>
       <View
-        style={{ alignItems: "flex-start", marginBottom: 16, marginTop: 16 }}
-      >
-        <TouchableOpacity onPress={onSignOut}>
-          <Text style={{ fontSize: 16, color: "#B353FF" }}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
-      <View
         style={{
+          marginTop: 40,
           alignItems: "center",
           justifyContent: "center",
         }}
