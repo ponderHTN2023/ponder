@@ -14,13 +14,13 @@ import { getUser } from "../api/user";
 import { useNavigation } from "@react-navigation/native";
 import ChallengesTab from "../components/tabs/ChallengesTab";
 import HomeTab from "../components/tabs/HomeTab";
-import JournalsTab from "../components/tabs/JournalsTab";
 import { useUser } from "@clerk/clerk-react";
 import Loading from "../components/Loading";
 import ExploreTab from "../components/tabs/ExploreTab";
 import TimerTab from "../components/tabs/TimerTab";
 import { MaterialIcons } from "@expo/vector-icons";
 import ProfileTab from "../components/tabs/ProfileTab";
+import CommunityTab from "../components/tabs/CommunityTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +37,6 @@ export default function BottomTabs() {
 
   const processUser = async () => {
     const res = await getUser(authUser.emailAddresses);
-    console.log("data:", res.data);
     setUser({
       id: res.data["id"],
       email: res.data["email"],
@@ -103,6 +102,22 @@ export default function BottomTabs() {
                 />
               );
               return image;
+            },
+            headerShown: false,
+            tabBarStyle: { backgroundColor: "#2A0060" },
+            tabBarLabelStyle: styles.tabBarLabel,
+          }}
+        />
+        <Tab.Screen
+          name="Community"
+          component={CommunityTab}
+          options={{
+            tabBarShowLabel: false,
+            tabBarIcon: ({ focused }) => {
+              const image = focused
+                ? require("../assets/people-selected.png")
+                : require("../assets/people.png");
+              return <Image source={image} style={styles.communityIcon} />;
             },
             headerShown: false,
             tabBarStyle: { backgroundColor: "#2A0060" },
@@ -188,6 +203,11 @@ const styles = StyleSheet.create({
     marginTop: 9,
     width: 28,
     height: 28,
+  },
+  communityIcon: {
+    marginTop: 9,
+    width: 32,
+    height: 32,
   },
   loadingContainer: {
     flex: 1,

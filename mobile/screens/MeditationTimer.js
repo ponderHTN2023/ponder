@@ -107,13 +107,14 @@ const MeditationTimer = ({ route, navigation }) => {
         ...user,
         minMeditated: user.minMeditated + timeSpent,
         numMeditations: user.numMeditations + 1,
-        avgDuration:
+        avgDuration: Math.floor(
           (user.avgDuration * user.numMeditations + timeSpent) /
-          (user.numMeditations + 1),
+            (user.numMeditations + 1)
+        ),
         sessions: [
           {
             ...activity,
-            id: user.sessions.length + 1,
+            id: user.sessions.length ? user.sessions[0].id + 1 : 1,
             created_at: new Date().toISOString(),
           },
           ...user.sessions,

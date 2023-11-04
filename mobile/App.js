@@ -17,6 +17,7 @@ import { StateProvider } from "./context/state";
 import MeditationDetails from "./screens/MeditationDetails";
 import MeditationTimer from "./screens/MeditationTimer";
 import ManualMeditation from "./screens/ManualMeditation";
+import CreateCommunity from "./screens/CreateCommunity";
 
 const tokenCache = {
   async getToken(key) {
@@ -81,7 +82,11 @@ export default function App() {
               <Stack.Screen
                 name="BottomTabs"
                 component={BottomTabs}
-                options={{ headerShown: false, gestureEnabled: false }}
+                options={{
+                  headerShown: false,
+                  gestureEnabled: false,
+                  animation: "slide_from_left",
+                }}
               />
               <Stack.Screen
                 name="GuidedMeditation"
@@ -123,6 +128,14 @@ export default function App() {
               <Stack.Screen
                 name="ManualMeditation"
                 component={ManualMeditation}
+                options={{
+                  headerShown: false,
+                  presentation: "modal",
+                }}
+              />
+              <Stack.Screen
+                name="CreateCommunity"
+                component={CreateCommunity}
                 options={{
                   headerShown: false,
                   presentation: "modal",

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -83,6 +83,7 @@ const ProfileTab = ({ route, navigation }) => {
                 id={item.id}
                 date={item?.created_at}
                 duration={item.duration}
+                name={item.name}
                 emotion={item.emotion}
                 technique={item.technique}
                 description={item.description}

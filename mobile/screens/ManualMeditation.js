@@ -20,7 +20,7 @@ const ManualMeditation = ({ route, navigation }) => {
 
   const save = async () => {
     const meditation = {
-      duration: duration,
+      duration: duration * 60,
       name: "Manual",
       technique: technique,
       description: description,
@@ -39,7 +39,7 @@ const ManualMeditation = ({ route, navigation }) => {
       sessions: [
         {
           ...meditation,
-          id: user.sessions.length + 2,
+          id: user.sessions.length ? user.sessions[0].id + 1 : 1,
           created_at: new Date().toISOString(),
         },
         ...user.sessions,
@@ -55,8 +55,8 @@ const ManualMeditation = ({ route, navigation }) => {
       >
         <Text style={styles.crossButtonText}>✕</Text>
       </TouchableOpacity>
-      <View style={{ marginHorizontal: 24 }}>
-        <Text style={styles.title}>Session Duration*</Text>
+      <View style={{ paddingHorizontal: 24, marginTop: 60 }}>
+        <Text style={styles.title}>Session Duration</Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={duration}
@@ -87,7 +87,14 @@ const ManualMeditation = ({ route, navigation }) => {
           <TextInput
             placeholder="How did it go?"
             numberOfLines={2}
-            style={[styles.textInput, { paddingTop: 10, width: "90%" }]}
+            style={[
+              styles.textInput,
+              {
+                paddingTop: 10,
+                height: 80,
+                textAlignVertical: "top",
+              },
+            ]}
             multiline={true}
             value={description}
             onChangeText={(text) => {
@@ -120,7 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "white",
     padding: 10,
-    width: "70%",
+    width: "100%",
     borderColor: "#ccc",
     borderWidth: 1,
     marginBottom: 32,
@@ -141,8 +148,8 @@ const styles = StyleSheet.create({
   },
   crossButton: {
     position: "absolute",
-    top: 40,
-    left: 27,
+    top: 30,
+    left: 24,
     paddingLeft: 12,
     paddingRight: 12,
     paddingTop: 10,

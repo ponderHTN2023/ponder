@@ -12,7 +12,7 @@ import SignUpForm from "../components/form/SignUp";
 import SignInForm from "../components/form/SignIn";
 
 const Auth = ({ navigation }) => {
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,14 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from app.models import UserProfile, Community, CommunityUser
-from rest_framework import serializers
+from app.views.community import CommunitySerializer
 
 
 class CommunityUserView(APIView):
     def get(self, request, id):
         user = UserProfile.objects.get(id=id)
-        communities = CommunityUser.objects.filter(user=user).values_list("community", flat=True)
-        return Response(communities)
+        communities = CommunityUser.objects.filter(user=user).values_list("community__id", flat=True)
+        serialized = CommunitySerializer(Community.objects.filter(id__in=communities), many=True) 
+        return Response(list(serialized.data))
 
 class CommunityUserDetailView(APIView):
     def get(self, request, user_id, community_id):

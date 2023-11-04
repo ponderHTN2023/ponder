@@ -61,7 +61,7 @@ class Activity(models.Model):
 
 class Community(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     banner_image = models.CharField(max_length=225, blank=True, null=True)
@@ -84,3 +84,42 @@ class CommunityUser(models.Model):
 
     def __str__(self):
         return self.user.name + " - " + self.community.title
+    
+class CommunityPost(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(UserProfile, related_name="community_posts", on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, related_name="community_posts", on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, related_name="community_posts", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
+
+class CommunityPostComment(models.Model):
+    id = models.AutoField(primary_key=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(UserProfile, related_name="community_post_comments", on_delete=models.CASCADE)
+    community_post = models.ForeignKey(CommunityPost, related_name="comments", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.content
+
+class CommunityPostLike(models.Model):
+    id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(UserProfile, related_name="community_post_likes", on_delete=models.CASCADE)
+    community_post = models.ForeignKey(CommunityPost, related_name="likes", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.user.name + " - " + self.community_post.title

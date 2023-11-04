@@ -187,7 +187,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         sessions: [
           {
             ...activity,
-            id: user.sessions.length + 1,
+            id: user.sessions.length ? user.sessions[0].id + 1 : 1,
             created_at: new Date().toISOString(),
           },
           ...user.sessions,

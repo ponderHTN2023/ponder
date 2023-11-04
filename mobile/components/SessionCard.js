@@ -27,8 +27,8 @@ const SessionCard = ({
 
   const formattedEmotion = () => {
     if (emotion) {
-      if (emotion.length > 15) {
-        return emotion.substr(0, 15) + "\u2026";
+      if (emotion.length > 12) {
+        return emotion.substr(0, 12) + "\u2026";
       } else {
         return emotion;
       }
@@ -38,8 +38,8 @@ const SessionCard = ({
 
   const formattedTechnique = () => {
     if (technique) {
-      if (technique.length > 15) {
-        return technique.substr(0, 15) + "\u2026";
+      if (technique.length > 12) {
+        return technique.substr(0, 12) + "\u2026";
       } else {
         return technique;
       }
@@ -59,18 +59,22 @@ const SessionCard = ({
       {description && <Text style={styles.cardDescription}>{description}</Text>}
       <View style={styles.infoContainer}>
         <View style={styles.section}>
-          <Text style={styles.infoTitle}>Emotion</Text>
-          <Text style={styles.infoValue}>{formattedEmotion()}</Text>
-        </View>
-        <View style={styles.divider}></View>
-        <View style={styles.section}>
-          <Text style={styles.infoTitle}>Technique</Text>
-          <Text style={styles.infoValue}>{formattedTechnique()}</Text>
-        </View>
-        <View style={styles.divider}></View>
-        <View style={styles.section}>
           <Text style={styles.infoTitle}>Duration</Text>
           <Text style={styles.infoValue}>{formattedDuration()}</Text>
+        </View>
+        <View style={styles.divider}></View>
+        <View style={styles.section}>
+          <Text style={styles.infoTitle}>Type</Text>
+          <Text style={styles.infoValue}>{name}</Text>
+        </View>
+        <View style={styles.divider}></View>
+        <View style={styles.section}>
+          <Text style={styles.infoTitle}>
+            {technique ? "Technique" : "Emotion"}
+          </Text>
+          <Text style={styles.infoValue}>
+            {technique ? formattedTechnique() : formattedEmotion()}
+          </Text>
         </View>
       </View>
     </View>
