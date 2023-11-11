@@ -70,7 +70,7 @@ class Community(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.title
+        return self.name
 
 class CommunityUser(models.Model):
     id = models.AutoField(primary_key=True)
@@ -83,14 +83,13 @@ class CommunityUser(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.user.name + " - " + self.community.title
+        return self.user.name + " - " + self.community.name
     
 class CommunityPost(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(UserProfile, related_name="community_posts", on_delete=models.CASCADE)
-    community = models.ForeignKey(Community, related_name="community_posts", on_delete=models.CASCADE)
+    community_user = models.ForeignKey(CommunityUser, related_name="community_posts", on_delete=models.CASCADE, default=2)
     activity = models.ForeignKey(Activity, related_name="community_posts", on_delete=models.CASCADE)
 
     class Meta:
@@ -103,7 +102,7 @@ class CommunityPostComment(models.Model):
     id = models.AutoField(primary_key=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(UserProfile, related_name="community_post_comments", on_delete=models.CASCADE)
+    community_user = models.ForeignKey(CommunityUser, related_name="community_post_comments", on_delete=models.CASCADE)
     community_post = models.ForeignKey(CommunityPost, related_name="comments", on_delete=models.CASCADE)
 
     class Meta:
@@ -115,11 +114,11 @@ class CommunityPostComment(models.Model):
 class CommunityPostLike(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(UserProfile, related_name="community_post_likes", on_delete=models.CASCADE)
+    community_user = models.ForeignKey(CommunityUser, related_name="community_post_likes", on_delete=models.CASCADE)
     community_post = models.ForeignKey(CommunityPost, related_name="likes", on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.user.name + " - " + self.community_post.title
+        return self.community_post.title

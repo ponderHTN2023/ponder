@@ -108,7 +108,7 @@ export default function BottomTabs() {
             tabBarLabelStyle: styles.tabBarLabel,
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Community"
           component={CommunityTab}
           options={{
@@ -123,7 +123,7 @@ export default function BottomTabs() {
             tabBarStyle: { backgroundColor: "#2A0060" },
             tabBarLabelStyle: styles.tabBarLabel,
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Challenges"
           component={ChallengesTab}

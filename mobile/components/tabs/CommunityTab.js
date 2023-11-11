@@ -7,6 +7,7 @@ import {
   Image,
   Touchable,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import CommunityListItem from "../CommunityListItem";
 import { useNavigation } from "@react-navigation/native";
@@ -15,9 +16,11 @@ import {
   getDiscoverCommunities,
 } from "../../api/community";
 import { StateContext } from "../../context/state";
+import Loading from "../Loading";
 
 export default function CommunityTab() {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useContext(StateContext);
   const [joinedCommunities, setJoinedCommunities] = useState([]);
   const [communities, setCommunities] = useState([]);
@@ -29,9 +32,18 @@ export default function CommunityTab() {
         const all = await getDiscoverCommunities(user.id);
         setJoinedCommunities(joined["data"]);
         setCommunities(all["data"]);
+        setLoading(false);
       })();
     }
   }, [user]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <Loading />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <View style={styles.page}>
@@ -90,7 +102,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "white",
-    fontSize: 24,
+    fontSize: 20,
     display: "flex",
     marginBottom: 32,
     marginTop: 32,
@@ -98,6 +110,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginLeft: 47,
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    backgroundColor: "#2A0060",
+    justifyContent: "center",
   },
   createIcon: {
     marginLeft: "auto",

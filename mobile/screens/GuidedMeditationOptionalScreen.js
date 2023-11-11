@@ -21,7 +21,6 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
     "Vipassana",
     "Mindful Walking",
   ];
-  const { emotion } = route?.params;
   const [technique, setTechnique] = useState("");
   const [inputStyle, setInputStyle] = useState(styles.textInput);
 

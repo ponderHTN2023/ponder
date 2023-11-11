@@ -31,7 +31,7 @@ function GuidedMeditationScreen({ navigation }) {
     <View style={{ ...styles.page, backgroundColor: "#2A0060" }}>
       <TouchableOpacity
         style={{ position: "absolute", top: 60, left: 20 }}
-        onPress={() => navigation.navigate("BottomTabs")}
+        onPress={() => navigation.goBack()}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons
@@ -93,7 +93,7 @@ function GuidedMeditationScreen({ navigation }) {
           //     emotion: selectedEmotion,
           //   });
           // }
-          navigation.navigate("GuidedMeditationOptional", {
+          navigation.navigate("Duration", {
             emotion: selectedEmotion,
           });
         }}

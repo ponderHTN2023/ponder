@@ -9,16 +9,28 @@ from scipy.io.wavfile import write as write_wav
 import nltk
 import numpy as np
 import time
+import io
+from openai import OpenAI
+from pathlib import Path
 
 # 1 min = 800 chars
+
 
 
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
         meditation = self.generate_meditations(request.data)
+        # import pdb; pdb.set_trace()
         upload_url = self.google_cloud_tts(meditation, request.data['duration'])
         # self.bark_tts(meditation)
         return Response({"meditation": upload_url})
+    
+    def create_speech(text):
+        client = OpenAI()
+
+        speech_file_path = Path(__file__).parent.parent / "assets/speech.mp3"
+        response = client.audio.speech.create(model="tts-1-hd", voice="onyx", input=text)
+        response.stream_to_file(speech_file_path)
 
     def generate_meditations(self, data):
         divisor = (10 + (data['duration']//60)*2) if data['duration'] > 60 else 10
@@ -242,4 +254,4 @@ class GenerateMeditationView(APIView):
         # speech_array = generate_audio(text_prompt, history_prompt=speaker)
 
         # play text in notebook
-        write_wav("../mobile/assets/meditation_speaker_3.wav", SAMPLE_RATE, audio)
+        write_wav(Path(__file__).parent.parent / "assets/meditation_speaker_3.wav", SAMPLE_RATE, audio)

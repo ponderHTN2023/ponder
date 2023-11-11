@@ -28,3 +28,11 @@ export const createCommunity = async (community) => {
   const data = await response.json();
   return { status: response.status, data };
 };
+
+export const getCommunity = async (communityId) => {
+  let response = await fetch(
+    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/communities/${communityId}`
+  );
+  const data = await response.json();
+  return { status: response.status, data };
+};

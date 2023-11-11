@@ -86,8 +86,10 @@ export default SessionCard;
 const styles = StyleSheet.create({
   card: {
     borderRadius: 20,
-    backgroundColor: "#B353FF",
-    width: 325,
+    backgroundColor: "rgba(112, 0, 224, 0.45)",
+    borderColor: "#B353FF",
+    borderWidth: 2,
+    marginHorizontal: 20,
     padding: 20,
     marginBottom: 17,
   },
@@ -118,6 +120,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 14,
     fontWeight: "500",
+    alignItems: "center",
     color: "#C9B0FF",
     marginBottom: 16,
   },

@@ -46,7 +46,7 @@ export default function ChallengesTab() {
       <Text
         style={{
           color: "white",
-          fontSize: 24,
+          fontSize: 20,
           display: "flex",
           marginBottom: 32,
           fontWeight: "500",

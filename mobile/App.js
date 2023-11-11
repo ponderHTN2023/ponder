@@ -18,6 +18,8 @@ import MeditationDetails from "./screens/MeditationDetails";
 import MeditationTimer from "./screens/MeditationTimer";
 import ManualMeditation from "./screens/ManualMeditation";
 import CreateCommunity from "./screens/CreateCommunity";
+import Community from "./screens/Community";
+import MeditationOptions from "./screens/MeditationOptions";
 
 const tokenCache = {
   async getToken(key) {
@@ -89,6 +91,11 @@ export default function App() {
                 }}
               />
               <Stack.Screen
+                name="MeditationOptions"
+                component={MeditationOptions}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
                 name="GuidedMeditation"
                 component={GuidedMeditationScreen}
                 options={{ headerShown: false }}
@@ -140,6 +147,11 @@ export default function App() {
                   headerShown: false,
                   presentation: "modal",
                 }}
+              />
+              <Stack.Screen
+                name="CommunityDetail"
+                component={Community}
+                options={{ headerShown: false }}
               />
             </Stack.Navigator>
           </SignedIn>

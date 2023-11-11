@@ -7,19 +7,18 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const CommunityListItem = ({
-  id,
-  name,
-  description,
-  members,
-  bannerImage,
-  navigation,
-}) => {
+const CommunityListItem = ({ id, name, description, members, bannerImage }) => {
+  const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate("Community", { id: id })}
+      onPress={() => {
+        navigation.navigate("CommunityDetail", { id });
+        console.log("here");
+      }}
     >
       <Image
         source={require("../assets/default-banner.png")}
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     color: "white",
     fontSize: 20,
-    fontWeight: "500",
+    fontWeight: "600",
   },
   members: {
     color: "#C9B0FF",

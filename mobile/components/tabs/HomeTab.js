@@ -52,7 +52,7 @@ export default function HomeTab() {
         buttonText="Begin"
         color="#B353FF"
         buttonColor="rgba(29, 0, 65, 0.49)"
-        onPress={() => navigation.navigate("GuidedMeditation")}
+        onPress={() => navigation.navigate("MeditationOptions")}
       />
       <Card
         title="Weekly Challenges"

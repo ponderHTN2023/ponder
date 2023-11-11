@@ -72,7 +72,16 @@ const ProfileTab = ({ route, navigation }) => {
           style={styles.buttonContainer}
           onPress={() => navigation.navigate("ManualMeditation")}
         >
-          <Text style={styles.buttonText}>Add Meditation Manually +</Text>
+          <Image
+            source={require("../../assets/plus.png")}
+            style={styles.plusIcon}
+          />
+          <View>
+            <Text style={styles.buttonTitle}>Add Meditation Manually</Text>
+            <Text style={styles.buttonSubtitle}>
+              Meditated without Ponder? No problem.
+            </Text>
+          </View>
         </TouchableOpacity>
         <View>
           <Text style={styles.historyTitle}>Session history</Text>
@@ -112,7 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   listContainer: {
-    width: "85%",
+    width: "100%",
     marginBottom: 30,
   },
   header: {
@@ -126,21 +135,33 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
+  plusIcon: {
+    width: 26,
+    height: 26,
+    marginRight: 16,
+  },
   nameContainer: {
     marginLeft: 24,
     flex: 1,
   },
   buttonContainer: {
     backgroundColor: "#7000E0",
+    marginHorizontal: 20,
     borderRadius: 14,
     paddingVertical: 20,
-    paddingHorizontal: 22,
+    paddingHorizontal: 24,
     alignItems: "center",
+    flexDirection: "row",
     marginBottom: 48,
   },
-  buttonText: {
+  buttonTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "white",
+  },
+  buttonSubtitle: {
+    fontSize: 14,
+    marginTop: 4,
     color: "white",
   },
   historyTitle: {
