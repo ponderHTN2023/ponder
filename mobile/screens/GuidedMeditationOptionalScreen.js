@@ -78,9 +78,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
 
       <TouchableOpacity
         onPress={() => {
-          console.log(emotion, technique);
           navigation.navigate("Duration", {
-            emotion: emotion,
             technique: technique,
           });
         }}

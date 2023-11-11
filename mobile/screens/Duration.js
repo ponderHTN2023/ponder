@@ -6,7 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 const Duration = ({ route, navigation }) => {
   const [selectedDuration, setSelectedDuration] = useState(1);
   const { emotion, technique } = route.params;
-  console.log("emotion:", emotion);
 
   const handleNextPress = () => {
     navigation.navigate("GuidedMeditationTimer", {
