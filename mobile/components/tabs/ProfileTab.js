@@ -46,7 +46,7 @@ const ProfileTab = ({ route, navigation }) => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Image
-            source={require("../../assets/icon.png")}
+            source={require("../../assets/icon2.png")}
             style={styles.logo}
           />
           <View style={styles.nameContainer}>

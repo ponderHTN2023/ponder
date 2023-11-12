@@ -17,7 +17,7 @@ const Auth = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
-        <Image source={require("../assets/icon.png")} style={styles.logo} />
+        <Image source={require("../assets/icon2.png")} style={styles.logo} />
         <Text style={[styles.title, { color: "white" }]}>
           {isSignUp ? "Create Account" : "Welcome back!"}
         </Text>

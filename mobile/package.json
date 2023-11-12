@@ -1,16 +1,19 @@
 {
   "name": "ponder",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "build:ios": "react-native bundle --entry-file='index.ios.js' --bundle-output='./ios/ponder/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
   },
   "dependencies": {
+    "@amplitude/analytics-react-native": "^1.4.5",
     "@clerk/clerk-expo": "^0.19.6",
+    "@expo/metro-config": "^0.10.7",
     "@expo/vector-icons": "^13.0.0",
+    "@react-native-async-storage/async-storage": "^1.19.5",
     "@react-native-picker/picker": "^2.5.0",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
@@ -19,11 +22,13 @@
     "expo-asset": "~8.10.1",
     "expo-av": "~13.4.1",
     "expo-checkbox": "^2.5.0",
+    "expo-dev-client": "~2.4.12",
     "expo-file-system": "~15.4.4",
     "expo-secure-store": "^12.5.0",
+    "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
-    "react-native": "0.72.4",
+    "react-native": "0.72.6",
     "react-native-fs": "^2.20.0",
     "react-native-svg": "^13.13.0",
     "react-native-util": "^1.0.2"

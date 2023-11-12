@@ -25,7 +25,7 @@ const Onboarding = ({ navigation }) => {
 
         {/* Content */}
         <View style={styles.contentContainer}>
-          <Image source={require("../assets/icon.png")} style={styles.logo} />
+          <Image source={require("../assets/icon2.png")} style={styles.logo} />
           <Text style={[styles.title, { color: "white" }]}>
             Welcome to Ponder
           </Text>

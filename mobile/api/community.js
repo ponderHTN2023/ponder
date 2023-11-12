@@ -1,6 +1,8 @@
+import Constants from "expo-constants";
+
 export const getDiscoverCommunities = async (userId) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/communities/discover/${userId}`
+    `${Constants.expoConfig.extra.serverUrl}/api/communities/discover/${userId}`
   );
   const data = await response.json();
   return { status: response.status, data };
@@ -8,7 +10,7 @@ export const getDiscoverCommunities = async (userId) => {
 
 export const getUserCommunities = async (userId) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/users/${userId}/communities/`
+    `${Constants.expoConfig.extra.serverUrl}/api/users/${userId}/communities/`
   );
   const data = await response.json();
   return { status: response.status, data };
@@ -16,7 +18,7 @@ export const getUserCommunities = async (userId) => {
 
 export const createCommunity = async (community) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/communities/`,
+    `${Constants.expoConfig.extra.serverUrl}/api/communities/`,
     {
       method: "POST",
       headers: {
@@ -31,7 +33,7 @@ export const createCommunity = async (community) => {
 
 export const getCommunity = async (communityId) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/communities/${communityId}`
+    `${Constants.expoConfig.extra.serverUrl}/api/communities/${communityId}`
   );
   const data = await response.json();
   return { status: response.status, data };

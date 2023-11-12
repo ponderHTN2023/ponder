@@ -1,6 +1,8 @@
+import Constants from "expo-constants";
+
 export const createMeditation = async (data) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/meditation`,
+    `${Constants.expoConfig.extra.serverUrl}/api/meditation`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -14,7 +16,7 @@ export const createMeditation = async (data) => {
 
 export const saveMeditation = async (id, data) => {
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/activities/${id}`,
+    `${Constants.expoConfig.extra.serverUrl}/api/activities/${id}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

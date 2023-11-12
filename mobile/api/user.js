@@ -1,6 +1,12 @@
+import Constants from "expo-constants";
+
 export const getUser = async (email) => {
+  console.log(
+    "route",
+    `${Constants.expoConfig.extra.serverUrl}/api/users/${email}`
+  );
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/users/${email}`
+    `${Constants.expoConfig.extra.serverUrl}/api/users/${email}`
   );
   if (response.status === 404) {
     return { status: response.status };
@@ -10,9 +16,9 @@ export const getUser = async (email) => {
 };
 
 export const createUser = async (user) => {
-  console.log("route", `${process.env.EXPO_PUBLIC_SERVER_URL}/api/users/`);
+  console.log("route", `${Constants.expoConfig.extra.serverUrl}/api/users/`);
   let response = await fetch(
-    `${process.env.EXPO_PUBLIC_SERVER_URL}/api/users/`,
+    `${Constants.expoConfig.extra.serverUrl}/api/users/`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
