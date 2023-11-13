@@ -197,7 +197,7 @@ class GenerateMeditationView(APIView):
         )
 
         # The response's audio_content is binary.
-        with open(f"app/assets/meditation.mp3", "wb") as out:
+        with open("app/assets/meditation.mp3", "wb") as out:
             response = client.synthesize_speech(
                 input=synthesis_input, voice=voice, audio_config=audio_config
             )

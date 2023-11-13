@@ -55,6 +55,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
         placeholder="Please select one (Optional)"
         style={inputStyle}
         value={technique}
+        placeholderTextColor="#B9B9B9"
         onChangeText={(text) => {
           setTechnique(text);
           setInputStyle(styles.textInput);

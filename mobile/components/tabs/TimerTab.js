@@ -4,10 +4,10 @@ import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 
 const TimerTab = ({ route, navigation }) => {
-  const minutes = Array.from({ length: 60 }, (_, i) => i + 1).concat(
-    Array("unlimited")
+  const minutes = Array("unlimited").concat(
+    Array.from({ length: 60 }, (_, i) => i + 1)
   );
-  const [selectedDuration, setSelectedDuration] = useState(1);
+  const [selectedDuration, setSelectedDuration] = useState("unlimited");
 
   const handleNextPress = () => {
     navigation.navigate("MeditationTimer", {

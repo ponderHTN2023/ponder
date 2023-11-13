@@ -56,6 +56,7 @@ function GuidedMeditationScreen({ navigation }) {
       </Text>
       <TextInput
         placeholder="Custom... (Optional)"
+        placeholderTextColor="#B9B9B9"
         style={inputStyle}
         value={selectedEmotion}
         clearButtonMode="always"

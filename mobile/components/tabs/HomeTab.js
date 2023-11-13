@@ -1,5 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Card from "../Card";
@@ -17,7 +24,7 @@ export default function HomeTab() {
   });
 
   return (
-    <View style={styles.page}>
+    <ScrollView style={styles.page}>
       <View
         style={{
           marginTop: 40,
@@ -49,7 +56,7 @@ export default function HomeTab() {
       <Card
         title="Guided Meditation"
         description={`How are you feeling today, ${user.name}?`}
-        buttonText="Begin"
+        buttonText="Begin Meditation"
         color="#B353FF"
         buttonColor="rgba(29, 0, 65, 0.49)"
         onPress={() => navigation.navigate("MeditationOptions")}
@@ -79,47 +86,15 @@ export default function HomeTab() {
         buttonColor="rgba(29, 0, 65, 0.49)"
         onPress={() => navigation.navigate("Challenges")}
       />
-
-      <View style={styles.card}>
-        <View
-          style={{
-            flexDirection: "row",
-            marginBottom: 20,
-            alignItems: "center",
-          }}
-        >
-          <Text style={styles.cardTitle}>Journal</Text>
-          <View
-            style={{
-              marginLeft: "auto",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Feather name="calendar" size={16} color="white" />
-            <Text
-              style={{
-                fontSize: 16,
-                marginLeft: 8,
-                color: "white",
-                fontWeight: "500",
-              }}
-            >
-              {formattedDate}
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
-            style={styles.cardButton}
-            onPress={() => navigation.navigate("Journals")}
-          >
-            <Text style={styles.buttonText}>New Entry</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+      <Card
+        title="Meditation Timer"
+        description={`Set your ideal meditation duration and immerse yourself in stillness.`}
+        buttonText="Start"
+        color="#7000E0"
+        buttonColor="rgba(29, 0, 65, 0.49)"
+        onPress={() => navigation.navigate("Timer")}
+      />
+    </ScrollView>
   );
 }
 

@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(112, 0, 224, 0.45)",
     borderColor: "#B353FF",
     borderWidth: 2,
-    marginHorizontal: 20,
     padding: 20,
     marginBottom: 17,
   },
@@ -105,6 +104,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 40,
+    marginHorizontal: 20,
     justifyContent: "center",
     alignItems: "center",
     width: 1,

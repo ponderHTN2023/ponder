@@ -62,6 +62,7 @@ export default function SignInForm({ navigation }) {
       <TextInput
         autoCapitalize="none"
         placeholder="Email Address"
+        placeholderTextColor="#B9B9B9"
         inputMode="email"
         style={emailErr ? styles.textInputError : styles.textInput}
         value={emailAddress}
@@ -72,6 +73,7 @@ export default function SignInForm({ navigation }) {
       <TextInput
         autoCapitalize="none"
         placeholder="Password"
+        placeholderTextColor="#B9B9B9"
         style={passwordErr ? styles.textInputError : styles.textInput}
         clearButtonMode="always"
         secureTextEntry={true}

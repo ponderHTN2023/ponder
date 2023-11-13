@@ -76,6 +76,7 @@ const ManualMeditation = ({ route, navigation }) => {
           <TextInput
             placeholder="Any specific type of meditation?"
             style={styles.textInput}
+            placeholderTextColor="#B9B9B9"
             value={technique}
             onChangeText={(text) => {
               setTechnique(text);
@@ -87,6 +88,7 @@ const ManualMeditation = ({ route, navigation }) => {
           <TextInput
             placeholder="How did it go?"
             numberOfLines={2}
+            placeholderTextColor="#B9B9B9"
             style={[
               styles.textInput,
               {

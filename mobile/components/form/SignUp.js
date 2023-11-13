@@ -111,6 +111,7 @@ export default function SignUpForm({ navigation }) {
           <TextInput
             placeholder="Code"
             style={styles.textInput}
+            placeholderTextColor="#B9B9B9"
             value={code}
             onChangeText={(text) => {
               setCode(text);
@@ -129,6 +130,7 @@ export default function SignUpForm({ navigation }) {
             placeholder="Name"
             style={nameErr ? styles.textInputError : styles.textInput}
             value={name}
+            placeholderTextColor="#B9B9B9"
             onChangeText={(text) => {
               setName(text);
             }}
@@ -136,6 +138,7 @@ export default function SignUpForm({ navigation }) {
           <TextInput
             placeholder="Email Address"
             autoCapitalize="none"
+            placeholderTextColor="#B9B9B9"
             style={emailErr ? styles.textInputError : styles.textInput}
             value={emailAddress}
             onChangeText={(text) => {
@@ -145,6 +148,7 @@ export default function SignUpForm({ navigation }) {
           <TextInput
             placeholder="Password"
             autoCapitalize="none"
+            placeholderTextColor="#B9B9B9"
             style={passwordErr ? styles.textInputError : styles.textInput}
             clearButtonMode="always"
             secureTextEntry={true}

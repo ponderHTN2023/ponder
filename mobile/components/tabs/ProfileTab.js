@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   listContainer: {
-    width: "100%",
+    width: "85%",
     marginBottom: 30,
   },
   header: {

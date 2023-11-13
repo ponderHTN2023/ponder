@@ -139,29 +139,36 @@ const MeditationTimer = ({ route, navigation }) => {
       <TouchableOpacity style={styles.crossButton} onPress={exit}>
         <Text style={styles.crossButtonText}>✕</Text>
       </TouchableOpacity>
-      <Svg width="200" height="200" style={styles.timer} viewBox="0 0 200 200">
-        <Circle
-          cx="100"
-          cy="100"
-          r="95"
-          stroke="#C9B0FF"
-          strokeWidth={DURATION === "unlimited" ? "0" : "10"}
-          fill="#7000E0"
-          strokeLinecap="round"
-          transform="rotate(-90 100 100)"
-          strokeDasharray={`${progress * Math.PI * 2 * 95} 600`}
-        />
-      </Svg>
-      <View style={styles.button}>
-        <TouchableOpacity onPress={handlePress}>
-          <Image
-            source={
-              isPlaying
-                ? require("../assets/pause.png")
-                : require("../assets/play.png")
-            }
+      <View style={{ marginTop: 24 }}>
+        <Svg
+          width="200"
+          height="200"
+          style={{ overflow: "hidden" }}
+          viewBox="0 0 200 200"
+        >
+          <Circle
+            cx="100"
+            cy="100"
+            r="95"
+            stroke="#C9B0FF"
+            strokeWidth={DURATION === "unlimited" ? "0" : "10"}
+            fill="#7000E0"
+            strokeLinecap="round"
+            transform="rotate(-90 100 100)"
+            strokeDasharray={`${progress * Math.PI * 2 * 95} 600`}
           />
-        </TouchableOpacity>
+        </Svg>
+        <View style={styles.button}>
+          <TouchableOpacity onPress={handlePress}>
+            <Image
+              source={
+                isPlaying
+                  ? require("../assets/pause.png")
+                  : require("../assets/play.png")
+              }
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Text style={styles.time}>{formatTime(timeSpent)}</Text>
@@ -183,21 +190,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#2A0060",
     justifyContent: "center",
   },
-  timer: {
-    position: "absolute",
-    top: 275,
-  },
   button: {
-    // marginTop: 10,
-    position: "absolute",
-    top: 360,
-    left: 186,
+    position: "relative",
+    top: -115,
+    left: 88,
     zIndex: 100,
   },
   time: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 340,
+    marginTop: 30,
     color: "white",
   },
   crossButton: {
