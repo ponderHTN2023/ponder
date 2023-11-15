@@ -105,7 +105,7 @@ const MeditationTimer = ({ route, navigation }) => {
       };
       setUser({
         ...user,
-        minMeditated: user.minMeditated + timeSpent,
+        minMeditated: user.minMeditated + Math.floor(timeSpent / 60),
         numMeditations: user.numMeditations + 1,
         avgDuration: Math.floor(
           (user.avgDuration * user.numMeditations + timeSpent) /

@@ -177,7 +177,8 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       };
       setUser({
         ...user,
-        minMeditated: user.minMeditated + (duration - remainingTime),
+        minMeditated:
+          user.minMeditated + +Math.floor((duration - remainingTime) / 60),
         numMeditations: user.numMeditations + 1,
         avgDuration: Math.floor(
           (user.avgDuration * user.numMeditations +

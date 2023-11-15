@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   TextInput,
 } from "react-native";
-import { StateContext } from "../State";
+import { StateContext } from "../context/state";
 import { Ionicons } from "@expo/vector-icons";
 
 const emotions = [

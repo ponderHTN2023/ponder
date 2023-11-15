@@ -55,7 +55,7 @@ export default function HomeTab() {
       </View>
       <Card
         title="Guided Meditation"
-        description={`How are you feeling today, ${user.name}?`}
+        description={`How are you feeling today, ${user.name.split(" ")[0]}?`}
         buttonText="Begin Meditation"
         color="#B353FF"
         buttonColor="rgba(29, 0, 65, 0.49)"
