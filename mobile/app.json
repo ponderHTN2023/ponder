@@ -2,7 +2,9 @@
   "expo": {
     "name": "ponder",
     "slug": "ponder",
-    "version": "1.0.0",
+    "sdkVersion": "49.0.11",
+    "version": "2.0.0",
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +21,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.useponder.ponder"
+      "bundleIdentifier": "app.useponder.ponder",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

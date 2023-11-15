@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import GuidedMeditationTimer from "./screens/GuidedMeditationTimer";
+import { enableScreens } from "react-native-screens";
 import Onboarding from "./screens/Onboarding";
 import Onboarding2 from "./screens/Onboarding2";
 import Onboarding3 from "./screens/Onboarding3";
@@ -20,6 +21,9 @@ import ManualMeditation from "./screens/ManualMeditation";
 import CreateCommunity from "./screens/CreateCommunity";
 import Community from "./screens/Community";
 import MeditationOptions from "./screens/MeditationOptions";
+// import { init } from "@amplitude/analytics-react-native";
+
+// init("11730c6a5e11a86665fd13918f3a20a6", "seb7wake@amplitude.com");
 
 const tokenCache = {
   async getToken(key) {
@@ -40,13 +44,14 @@ const tokenCache = {
 
 const Stack = createStackNavigator();
 
-console.log("expoConfig:", Constants.expoConfig.extra);
-console.log("env:", process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
+// console.log("expoConfig:", Constants.expoConfig.extra);
+// console.log("env:", process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default function App() {
   return (
     <ClerkProvider
       tokenCache={tokenCache}
       publishableKey={Constants.expoConfig.extra.clerkPublishableKey}
+      // publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       <StateProvider>
         <NavigationContainer>

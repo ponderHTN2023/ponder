@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TextInput,
 } from "react-native";
+import { StateContext } from "../State";
 import { Ionicons } from "@expo/vector-icons";
 
 const emotions = [
@@ -24,6 +25,7 @@ const emotions = [
 ];
 
 function GuidedMeditationScreen({ navigation }) {
+  const [user, setUser] = useContext(StateContext);
   const [selectedEmotion, setSelectedEmotion] = useState("");
   const [inputStyle, setInputStyle] = useState(styles.textInput);
 
@@ -52,7 +54,8 @@ function GuidedMeditationScreen({ navigation }) {
           textAlign: "center",
         }}
       >
-        How are you feeling today,{"\n"}Sebastian?
+        How are you feeling today,{"\n"}
+        {user.name.split(" ")[0]}?
       </Text>
       <TextInput
         placeholder="Custom... (Optional)"

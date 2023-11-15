@@ -28,7 +28,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
     <View style={{ ...styles.page, backgroundColor: "#2A0060" }}>
       <TouchableOpacity
         style={{ position: "absolute", top: 60, left: 20 }}
-        onPress={() => navigation.navigate("GuidedMeditation")}
+        onPress={() => navigation.goBack()}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons
