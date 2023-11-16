@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import GuidedMeditationTimer from "./screens/GuidedMeditationTimer";
@@ -21,6 +21,9 @@ import ManualMeditation from "./screens/ManualMeditation";
 import CreateCommunity from "./screens/CreateCommunity";
 import Community from "./screens/Community";
 import MeditationOptions from "./screens/MeditationOptions";
+import Splash from "./screens/Splash";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
 // import { init } from "@amplitude/analytics-react-native";
 
 // init("11730c6a5e11a86665fd13918f3a20a6", "seb7wake@amplitude.com");
@@ -43,10 +46,34 @@ const tokenCache = {
 };
 
 const Stack = createStackNavigator();
+SplashScreen.preventAutoHideAsync();
 
-// console.log("expoConfig:", Constants.expoConfig.extra);
-// console.log("env:", process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default function App() {
+  const [isAppReady, setAppReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await Font.loadAsync(Entypo.font);
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppReady(true);
+      }
+    }
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (isAppReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isAppReady]);
+
+  if (!isAppReady) {
+    return <Splash />;
+  }
+
   return (
     <ClerkProvider
       tokenCache={tokenCache}
@@ -57,11 +84,9 @@ export default function App() {
         <NavigationContainer>
           <SignedOut>
             <Stack.Navigator initialRouteName="Auth">
-              <Stack.Screen
-                name="Auth"
-                component={Auth}
-                options={{ headerShown: false }}
-              />
+              <Stack.Screen name="Auth" options={{ headerShown: false }}>
+                {(props) => <Auth {...props} onLayout={onLayoutRootView} />}
+              </Stack.Screen>
             </Stack.Navigator>
           </SignedOut>
           <SignedIn>

@@ -11,11 +11,11 @@ import {
 import SignUpForm from "../components/form/SignUp";
 import SignInForm from "../components/form/SignIn";
 
-const Auth = ({ navigation }) => {
+const Auth = ({ navigation, onLayout }) => {
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} onLayout={onLayout}>
       <View style={styles.contentContainer}>
         <Image source={require("../assets/icon2.png")} style={styles.logo} />
         <Text style={[styles.title, { color: "white" }]}>

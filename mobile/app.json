@@ -22,6 +22,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.useponder.ponder",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"]
+      },
       "buildNumber": "2"
     },
     "android": {
