@@ -54,7 +54,7 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        await Font.loadAsync(Entypo.font);
+        // await Font.loadAsync(Roboto.font);
       } catch (e) {
         console.warn(e);
       } finally {

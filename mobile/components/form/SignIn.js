@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { useSignIn } from "@clerk/clerk-react";
 
@@ -18,17 +19,18 @@ export default function SignInForm({ navigation }) {
   const validateForm = () => {
     setEmailErr(false);
     setPasswordErr(false);
+    const title = "Oops! Sign In Hiccup 🧘‍♂️";
     if (emailAddress === "") {
-      alert("Email Address is required");
+      Alert.alert(title, "Email Address is required.");
       setEmailErr(true);
     } else if (!emailAddress.includes("@")) {
-      alert("Email Address must be valid");
+      Alert.alert(title, "Please enter a valid email address.");
       setEmailErr(true);
     } else if (password === "") {
-      alert("Password is required");
+      Alert.alert(title, "Password is required.");
       setPasswordErr(true);
     } else if (password.length < 8) {
-      alert("Password must be at least 8 characters");
+      Alert.alert(title, "Password must be at least 8 characters.");
       setPasswordErr(true);
     } else {
       onSignInPress();
@@ -53,7 +55,12 @@ export default function SignInForm({ navigation }) {
       console.log(err);
       setEmailErr(true);
       setPasswordErr(true);
-      alert("Invalid email or password");
+      Alert.alert(
+        "Oops! Sign In Hiccup 🧘‍♂️",
+        err.errors && err.errors.length > 0
+          ? err.errors[0].message
+          : "Your email address or password is incorrect. Please try again."
+      );
     }
   };
 

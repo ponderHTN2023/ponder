@@ -8,7 +8,8 @@
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_SERVER_URL": "https://www.useponder.app:8000",
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA",
+        "EXPO_PUBLIC_ENVIRONMENT": "PROD"
       }
     },
     "preview": {
@@ -18,13 +19,15 @@
       },
       "env": {
         "EXPO_PUBLIC_SERVER_URL": "https://www.useponder.app:8000",
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA",
+        "EXPO_PUBLIC_ENVIRONMENT": "PROD"
       }
     },
     "production": {
       "env": {
         "EXPO_PUBLIC_SERVER_URL": "https://www.useponder.app:8000",
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_live_Y2xlcmsudXNlcG9uZGVyLmFwcCQ",
+        "EXPO_PUBLIC_ENVIRONMENT": "PROD"
       }
     }
   },

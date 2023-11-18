@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
+  Alert,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import { Audio } from "expo-av";
@@ -38,11 +39,16 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         emotion: emotion,
         technique: technique,
       });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return response["uri"];
     } catch (error) {
       console.error("Error generating meditation:", error);
+      Alert.alert(
+        "Oops! Meditation Hiccup",
+        "Our meditation generator is taking a brief mindfulness break. Please give it a moment of peace and try again. 🧘‍♂️✨",
+        [{ text: "Try Again", onPress: () => navigation.navigate("Home") }]
+      );
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return response["uri"];
   };
 
   useEffect(() => {

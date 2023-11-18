@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { createUser } from "../../api/user";
 import { useSignUp, useAuth, useUser } from "@clerk/clerk-react";
@@ -52,8 +53,13 @@ export default function SignUpForm({ navigation }) {
       // await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       // setPendingVerification(true);
     } catch (err) {
-      console.error(err.message);
-      alert("Email or password input is invalid.");
+      console.error(err);
+      Alert.alert(
+        "Oops! Sign Up Hiccup 🧘‍♂️",
+        err.errors && err.errors.length > 0
+          ? err.errors[0].message
+          : "Your email address is invalid or already in use. Please try again."
+      );
       setEmailErr(true);
       setPasswordErr(true);
     }
@@ -63,20 +69,21 @@ export default function SignUpForm({ navigation }) {
     setEmailErr(false);
     setPasswordErr(false);
     setSetNameErr(false);
+    const title = "Oops! Sign Up Hiccup 🧘‍♂️";
     if (name === "") {
       setSetNameErr(true);
-      alert("Name is required.");
+      Alert.alert(title, "Name is required.");
     } else if (emailAddress === "") {
-      alert("Email Address is required");
+      Alert.alert(title, "Email address is required.");
       setEmailErr(true);
     } else if (!emailAddress.includes("@")) {
-      alert("Email Address must be valid");
+      Alert.alert(title, "Email address is invalid.");
       setEmailErr(true);
     } else if (password === "") {
-      alert("Password is required");
+      Alert.alert(title, "Password is required.");
       setPasswordErr(true);
     } else if (password.length < 8) {
-      alert("Password must be at least 8 characters");
+      Alert.alert(title, "Password must be at least 8 characters.");
       setPasswordErr(true);
     } else {
       onSignUpPress(emailAddress, password);

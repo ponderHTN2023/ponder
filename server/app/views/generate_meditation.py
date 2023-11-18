@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from pydub import AudioSegment
 import requests
 import os
 from google.cloud import texttospeech, storage
@@ -20,18 +21,35 @@ from pathlib import Path
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
         meditation = self.generate_meditations(request.data)
+        break_length = 7 + ((request.data.get("duration", 60) - 60) // 60)*2
+        # url = self.openai_tts(meditation, break_length)
         # import pdb; pdb.set_trace()
-        upload_url = self.google_cloud_tts(meditation, request.data['duration'])
+        url = self.google_cloud_tts(meditation, break_length)
         # self.bark_tts(meditation)
-        return Response({"meditation": upload_url})
+        return Response({"meditation": url})
     
-    def create_speech(text):
-        client = OpenAI()
-
-        speech_file_path = Path(__file__).parent.parent / "assets/speech.mp3"
-        response = client.audio.speech.create(model="tts-1-hd", voice="onyx", input=text)
-        response.stream_to_file(speech_file_path)
-
+    def openai_tts(self, text, break_length):
+        client = OpenAI(organization="org-NgV2YtGKKOa1OdQenbfTShXv", api_key=os.environ.get("OPENAI_API_KEY"))
+        text = text.split("\n")
+        # remove empty lines
+        text = [line for line in text if line != "" and line != " " and line != "\n"]
+        text[0] = text[0] + " " + text[1]
+        for t in text:
+            print(t)
+        text.pop(1)
+        out_file = Path(__file__).parent.parent / f"assets/speech.mp3"
+        three_sec_segment = AudioSegment.silent(duration=break_length*1000) 
+        speech = []
+        for i, content in enumerate(text):
+            speech_file_path = Path(__file__).parent.parent / f"assets/speech{i}.mp3"
+            response = client.audio.speech.create(model="tts-1", voice="fable", input=content, speed=0.85)
+            response.stream_to_file(speech_file_path)
+            speech.append(AudioSegment.from_mp3(speech_file_path))
+            speech.append(three_sec_segment)
+        final = sum(speech)
+        final.export(out_file, format="mp3")
+        return self.upload_to_gc_bucket(filename=out_file)
+    
     def generate_meditations(self, data):
         divisor = (10 + (data['duration']//60)*2) if data['duration'] > 60 else 10
         if (data['duration']//60) >= 5:
@@ -70,7 +88,7 @@ class GenerateMeditationView(APIView):
             prompt += "Meditation Type: " + data.get("technique") + "\n"
         if data.get("emotion"):
             prompt += "Emotion: " + data.get("emotion") + "\n"
-        prompt += f'Imagine you are guiding someone through a journey tailored to their emotions and situation{", using the specified meditation technique"if data.get("technique") else ""}. Format your output like this:\nExample sentence.\nAnother sentence.\nAnother sentence.\n'
+        prompt += f'Imagine you are guiding someone through a journey tailored to their emotions and situation{", using the specified meditation technique" if data.get("technique") else ""}. Format your output like this:\nExample sentence.\nAnother sentence.\nAnother sentence.\n'
         return prompt
     
     def prompt_2(self, data, num_lines):
@@ -97,13 +115,13 @@ class GenerateMeditationView(APIView):
           "craft a detailed script for a session. "
           f"Your script should be comprised of {num_lines} thoughtfully constructed sentences.\n"
           "Begin with an engaging introduction that eases the participant into the meditation, "
-          "gradually guide them through the stages or steps typical of the {data.get('technique')} technique, "
+          f"gradually guide them through the stages or steps typical of the {data.get('technique')} technique, "
           "and conclude with a gentle closure that leaves the participant in a state of calm and mindfulness.\n"
           "Ensure that each instruction or sentence is presented on a new line, adhering to the following format:\n"
           "Example introductory sentence.\n"
           "Followed by a technique-focused guiding sentence.\n"
           "Concluding with a soothing closing sentence.\n"
-          "Remember, each sentence should vividly embody the essence and uniqueness of the {data.get('technique')} meditation technique.")
+          f"Remember, each sentence should vividly embody the essence and uniqueness of the {data.get('technique')} meditation technique.")
         return prompt
     
     def prompt_5(self, data, num_lines):
@@ -113,7 +131,7 @@ class GenerateMeditationView(APIView):
         The script should consist of around {num_lines} sentences, including spaces and punctuation.
 
         Structure:
-        - Begin each sentence on a new line using at most {num_lines} sentences.
+        - Begin each sentence on a new line using at most {num_lines} sentences. Each sentence should be separated by the "\n" character.
         - Start with an introduction that acknowledges the specified emotion.
         - Progressively guide the listener deeper into the meditation with diverse and creative instructions or statements.
         - Conclude with a comforting or empowering sentiment.
@@ -165,9 +183,8 @@ class GenerateMeditationView(APIView):
         }
         
 
-    def google_cloud_tts(self, meditation, duration):
+    def google_cloud_tts(self, meditation, break_length):
         print("meditation result:", meditation)
-        break_length = 7 + ((duration - 60) // 60)*2
         meditation = meditation.split("\n")
         text = "<speak>"
         for i in range(len(meditation)):
@@ -208,7 +225,7 @@ class GenerateMeditationView(APIView):
         return self.upload_to_gc_bucket()
     
     # https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3
-    def upload_to_gc_bucket(self):
+    def upload_to_gc_bucket(self, filename = "app/assets/meditation.mp3"):
         # Explicitly use service account credentials by specifying the private key
         # file.
         storage_client = storage.Client.from_service_account_json(
@@ -221,7 +238,7 @@ class GenerateMeditationView(APIView):
         bucket = storage_client.get_bucket("ponder_meditations")
         random_id = str(uuid.uuid4())
         blob = bucket.blob(f"meditation-{random_id}.mp3")
-        blob.upload_from_filename("app/assets/meditation.mp3")
+        blob.upload_from_filename(filename)
         print("File uploaded to meditation-bucket")
         return blob.public_url
     
