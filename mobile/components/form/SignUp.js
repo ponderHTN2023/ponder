@@ -55,7 +55,7 @@ export default function SignUpForm({ navigation }) {
     } catch (err) {
       console.error(err);
       Alert.alert(
-        "Oops! Sign Up Hiccup 🧘‍♂️",
+        "Oops! Invalid Email 🧘‍♂️",
         err.errors && err.errors.length > 0
           ? err.errors[0].message
           : "Your email address is invalid or already in use. Please try again."
@@ -69,7 +69,7 @@ export default function SignUpForm({ navigation }) {
     setEmailErr(false);
     setPasswordErr(false);
     setSetNameErr(false);
-    const title = "Oops! Sign Up Hiccup 🧘‍♂️";
+    const title = "Oops! 🧘‍♂️";
     if (name === "") {
       setSetNameErr(true);
       Alert.alert(title, "Name is required.");

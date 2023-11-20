@@ -19,7 +19,7 @@ import Loading from "../components/Loading";
 
 const GuidedMeditationTimer = ({ route, navigation }) => {
   const [duration, setDuration] = useState(route.params?.duration * 60 || 60);
-  const { emotion, technique } = route.params;
+  const { emotion, technique, sessionUri } = route.params;
   const [user, setUser] = useContext(StateContext);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -31,7 +31,6 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
   const [meditationUri, setMeditationUri] = useState();
 
   const generateMeditation = async () => {
-    setLoading(true);
     let response = { uri: "" };
     try {
       response = await createMeditation({
@@ -54,7 +53,11 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
   useEffect(() => {
     const setupAudio = async () => {
       try {
-        const uri = await generateMeditation();
+        let uri = sessionUri;
+        setLoading(true);
+        if (!uri) {
+          uri = await generateMeditation();
+        }
         console.log("uri:", uri);
         setMeditationUri(uri);
         await Audio.setAudioModeAsync({
@@ -206,13 +209,17 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
   };
 
   const exit = async () => {
+    if (sessionUri) {
+      navigation.goBack();
+    } else {
+      navigation.navigate("Home");
+    }
     if (sound) {
       await sound.stopAsync();
       setIsPlaying(false);
       console.log(duration - remainingTime);
-      trackMeditation();
     }
-    navigation.navigate("Home");
+    trackMeditation();
   };
 
   if (loading) {

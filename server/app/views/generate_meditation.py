@@ -25,6 +25,7 @@ class GenerateMeditationView(APIView):
         # url = self.openai_tts(meditation, break_length)
         # import pdb; pdb.set_trace()
         url = self.google_cloud_tts(meditation, break_length)
+        print("meditation url:", url)
         # self.bark_tts(meditation)
         return Response({"meditation": url})
     
@@ -32,23 +33,81 @@ class GenerateMeditationView(APIView):
         client = OpenAI(organization="org-NgV2YtGKKOa1OdQenbfTShXv", api_key=os.environ.get("OPENAI_API_KEY"))
         text = text.split("\n")
         # remove empty lines
-        text = [line for line in text if line != "" and line != " " and line != "\n"]
+        text = [line for line in text if line not in ["", " ", "\n"]]
         text[0] = text[0] + " " + text[1]
         for t in text:
             print(t)
         text.pop(1)
         out_file = Path(__file__).parent.parent / f"assets/speech.mp3"
-        three_sec_segment = AudioSegment.silent(duration=break_length*1000) 
+        speech_break = AudioSegment.silent(duration=break_length*1000) 
         speech = []
         for i, content in enumerate(text):
             speech_file_path = Path(__file__).parent.parent / f"assets/speech{i}.mp3"
             response = client.audio.speech.create(model="tts-1", voice="fable", input=content, speed=0.85)
             response.stream_to_file(speech_file_path)
             speech.append(AudioSegment.from_mp3(speech_file_path))
-            speech.append(three_sec_segment)
+            speech.append(speech_break)
         final = sum(speech)
         final.export(out_file, format="mp3")
         return self.upload_to_gc_bucket(filename=out_file)
+    
+    def google_cloud_tts(self, meditation, break_length):
+        print("meditation result:", meditation)
+        meditation = meditation.split("\n")
+        # remove empty lines
+        meditation = [line for line in meditation if line not in  ["", " ", "\n"]]
+        # meditation[0] = meditation[0] + " " + meditation[1]
+        # meditation.pop(1)
+        text = "<speak>"
+        for i in range(len(meditation)):
+            if meditation[i]:
+                text += meditation[i]
+                text += f'<break time="{break_length}s"/>' if i != len(meditation) - 1 else ""
+        text += "</speak>"
+
+        print("creating meditation text:", text)
+        # Instantiates a client
+        client = texttospeech.TextToSpeechLongAudioSynthesizeClient.from_service_account_json(
+            "../server/credentials.json"
+        )
+
+        synthesis_input = texttospeech.SynthesisInput(ssml=text)
+
+        # Build the voice request, select the language code ("en-US") and the ssml
+        # voice gender ("neutral")
+        voice = texttospeech.VoiceSelectionParams(
+            name="en-US-Studio-Q",
+            language_code="en-US",
+        )
+
+        # Select the type of audio file you want returned
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
+            speaking_rate=0.75,
+            # volume_gain_db=-20,
+            # pitch=0.95,
+        )
+
+        parent = f"projects/{'ponder-399206'}/locations/{'us-central1'}"
+
+        output_uri = f"gs://ponder_meditations/meditation-{str(uuid.uuid4())}.wav"
+        request = texttospeech.SynthesizeLongAudioRequest(
+                parent=parent,
+                input=synthesis_input, voice=voice, audio_config=audio_config, output_gcs_uri=output_uri
+            )
+
+        client.synthesize_long_audio(request=request)
+        # # The response's audio_content is binary.
+        # with open("app/assets/meditation.mp3", "wb") as out:
+        #     response = client.synthesize_long_audio(
+        #         parent=parent,
+        #         input=synthesis_input, voice=voice, audio_config=audio_config, output_uri=f"gs://ponder_meditations/meditation={random}.mp3"
+        #     )
+        #     # Write the response to the output file.
+        #     out.write(response.audio_content)
+        #     time.sleep(5)
+        #     print('Audio content written to file "meditation.mp3"')
+        return "https://storage.googleapis.com/" + output_uri.split("//")[1]
     
     def generate_meditations(self, data):
         divisor = (10 + (data['duration']//60)*2) if data['duration'] > 60 else 10
@@ -56,11 +115,9 @@ class GenerateMeditationView(APIView):
             divisor = (12 + (data['duration']//60)*2)
         num_lines = data['duration']//divisor
         if data.get("emotion") and not data.get("technique"):
-            prompt = self.prompt_5(data, num_lines)
+            prompt = self.emotion_2(data, num_lines)
         elif data.get("technique") and not data.get("emotion"):
-            prompt = self.prompt_4(data, num_lines)
-        else:
-            prompt = self.prompt_6(data, num_lines)
+            prompt = self.technique(data, num_lines)
         print("sending request...")
         print("prompt:", prompt, "\n\n")
         headers = {
@@ -109,11 +166,11 @@ class GenerateMeditationView(APIView):
         prompt += f'\nPlease create a tailored guided meditation that aligns directly with the current state and situation, {", technique, and duration" if data.get("technique") else "and duration" }. Make it as personalized as possible. The format of the output is \nExample sentence.\nAnother sentence.\nAnother sentence.\n'
         return prompt
     
-    def prompt_4(self, data, num_lines):
+    def technique(self, data, num_lines):
         chars = num_lines * 60
         prompt = (f"As a meditation guide specialized in {data.get('technique')}, "
           "craft a detailed script for a session. "
-          f"Your script should be comprised of {num_lines} thoughtfully constructed sentences.\n"
+          f"Your script should be comprised of {num_lines} thoughtfully constructed sentences. Each sentence should be separated by the '\n' character. \n"
           "Begin with an engaging introduction that eases the participant into the meditation, "
           f"gradually guide them through the stages or steps typical of the {data.get('technique')} technique, "
           "and conclude with a gentle closure that leaves the participant in a state of calm and mindfulness.\n"
@@ -124,7 +181,7 @@ class GenerateMeditationView(APIView):
           f"Remember, each sentence should vividly embody the essence and uniqueness of the {data.get('technique')} meditation technique.")
         return prompt
     
-    def prompt_5(self, data, num_lines):
+    def emotion_1(self, data, num_lines):
         chars = num_lines * 60
         prompt = f"""
         Craft a unique guided meditation script focused on the emotion: {data.get('emotion')}. 
@@ -150,29 +207,32 @@ class GenerateMeditationView(APIView):
         """
         return prompt
     
-    def prompt_6(self, data, num_lines):
+    def emotion_2(self, data, num_lines):
         chars = num_lines * 60  # character count remains the same
-        return f"""
-        As a meditation architect, your task is to weave a transformative guided meditation script. This script should resonate with the emotion: {data.get('emotion')}, employing the meditation technique: {data.get('technique')}. Aim to compose a script of about {num_lines} sentences, each sentence embodying a breath of clarity and focus.
+        prompt = f"""
+            Develop a guided meditation script centered on the emotion: {data.get('emotion')}.
+            The script should comprise exactly {num_lines} sentences.
 
-        **Structural Flow:**
-        - Commence with an introduction that gently acknowledges and embraces the specified emotion.
-        - Unfold the meditation journey with a variety of authentic and creative directives, aligning with the chosen technique.
-        - Culminate the session with a warm, reassuring sentiment that empowers and comforts the meditator.
+            Structure:
+            - Start with a comforting introductory sentence that acknowledges the emotion of {data.get("emotion")}, setting a tone of acceptance and understanding.
+            - Follow with sentences that guide the listener through a meditation technique suitable for the emotion. Techniques can include breath awareness, body scanning, visualization, loving-kindness, focused attention, vipassana, or any other appropriate method.
+            - Each sentence should begin on a new line, separated by the "\n" character.
+            - Progressively deepen the meditation, providing clear and concise instructions.
+            - Conclude with a sentence offering closure, reassurance, or a positive affirmation.
 
-        **Craftsmanship Guidelines:**
-        - Tailor each sentence with care and precision, adhering to the limit of {num_lines} sentences.
-        - Navigate the landscape of imagery with balance, ensuring its use complements rather than overwhelms the meditation experience.
-        - Harmonize the essence of the selected technique with the emotional theme, cultivating a congruent meditation flow.
+            Guidelines:
+            - Total length: Strictly {num_lines} sentences. Each sentence should be separated by the "\n" character on a new line.
+            - Balance clear guidance with engaging delivery, avoiding overly complex imagery.
+            - Ensure the script is coherent, with each sentence logically leading into the next.
 
-        **Example Blueprint:**
-        An empathetic sentence acknowledging the emotion.
-        A guiding statement that gently leads into the meditation technique.
-        Continuous, fluid instructions that deepen the meditation experience.
-        A closing sentiment that blankets the meditator with comfort and empowerment.
+            Example Format:
+            Introduction sentence that recognizes the emotion of {data.get('emotion')} and eases into the meditation.\n
+            Instruction sentence applying the selected meditation technique.\n
+            Comforting or empowering conclusion.
 
-        Embark on this creative journey with mindfulness, ensuring your script is a luminous guide that aligns harmoniously with the specified emotion and meditation technique, fulfilling the format and sentence count requisites.
+            The script should be empathetic towards the emotion: {data.get('emotion')}, and consistently apply the chosen meditation technique, adhering to the format and sentence count.
         """
+        return prompt
 
     
     def get_json(self, prompt):
@@ -182,47 +242,6 @@ class GenerateMeditationView(APIView):
             "temperature": 1.2,
         }
         
-
-    def google_cloud_tts(self, meditation, break_length):
-        print("meditation result:", meditation)
-        meditation = meditation.split("\n")
-        text = "<speak>"
-        for i in range(len(meditation)):
-            if meditation[i]:
-                text += meditation[i]
-                text += f'<break time="{break_length}s"/>' if i != len(meditation) - 1 else ""
-        text += "</speak>"
-
-        print("creating meditation text:", text)
-        # Instantiates a client
-        client = texttospeech.TextToSpeechClient()
-
-        synthesis_input = texttospeech.SynthesisInput(ssml=text)
-
-        # Build the voice request, select the language code ("en-US") and the ssml
-        # voice gender ("neutral")
-        voice = texttospeech.VoiceSelectionParams(
-            name="en-GB-Neural2-D",
-            language_code="en-GB",
-        )
-
-        # Select the type of audio file you want returned
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3,
-            speaking_rate=0.95,
-            # pitch=0.95,
-        )
-
-        # The response's audio_content is binary.
-        with open("app/assets/meditation.mp3", "wb") as out:
-            response = client.synthesize_speech(
-                input=synthesis_input, voice=voice, audio_config=audio_config
-            )
-            # Write the response to the output file.
-            out.write(response.audio_content)
-            time.sleep(5)
-            print('Audio content written to file "meditation.mp3"')
-        return self.upload_to_gc_bucket()
     
     # https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3
     def upload_to_gc_bucket(self, filename = "app/assets/meditation.mp3"):

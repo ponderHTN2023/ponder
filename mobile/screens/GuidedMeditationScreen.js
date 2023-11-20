@@ -15,13 +15,17 @@ const emotions = [
   "Stressed",
   "Anxious",
   "Tired",
-  "Confident",
   "Conflicted",
   "Overwhelmed",
   "Relaxed",
-  "Inspired",
   "Restless",
   "Hopeful",
+  "Lonely",
+  "Angry",
+  "Bored",
+  "Frustrated",
+  "Excited",
+  "Unmotivated",
 ];
 
 function GuidedMeditationScreen({ navigation }) {
@@ -58,7 +62,7 @@ function GuidedMeditationScreen({ navigation }) {
         {user.name.split(" ")[0]}?
       </Text>
       <TextInput
-        placeholder="Custom... (Optional)"
+        placeholder="Please select one or type your own..."
         placeholderTextColor="#B9B9B9"
         style={inputStyle}
         value={selectedEmotion}
@@ -68,6 +72,9 @@ function GuidedMeditationScreen({ navigation }) {
           setInputStyle(styles.textInput);
         }}
       />
+      <Text style={styles.subText}>
+        Just a word or short phrase is all we need ✨
+      </Text>
 
       <View style={styles.emotionContainer}>
         {emotions.map((emotion, index) => (
@@ -86,20 +93,17 @@ function GuidedMeditationScreen({ navigation }) {
 
       <TouchableOpacity
         onPress={() => {
-          // if (selectedEmotion === "") {
-          //   setInputStyle({
-          //     ...styles.textInput,
-          //     borderColor: "red",
-          //     borderWidth: 3,
-          //   });
-          // } else {
-          //   navigation.navigate("GuidedMeditationOptional", {
-          //     emotion: selectedEmotion,
-          //   });
-          // }
-          navigation.navigate("Duration", {
-            emotion: selectedEmotion,
-          });
+          if (selectedEmotion === "") {
+            setInputStyle({
+              ...styles.textInput,
+              borderColor: "red",
+              borderWidth: 3,
+            });
+          } else {
+            navigation.navigate("Duration", {
+              emotion: selectedEmotion,
+            });
+          }
         }}
         style={styles.buttonContainer}
       >
@@ -117,12 +121,18 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   textInput: {
-    width: "75%",
+    width: "85%",
     borderRadius: 12,
     backgroundColor: "white",
     padding: 10,
     borderColor: "#ccc",
     borderWidth: 1,
+    marginBottom: 5,
+  },
+  subText: {
+    width: "85%",
+    color: "white",
+    textAlign: "center",
     marginBottom: 20,
   },
   emotionContainer: {
@@ -141,7 +151,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: "30%",
     alignItems: "center",
-    marginBottom: 30,
   },
   buttonText: {
     fontSize: 16,

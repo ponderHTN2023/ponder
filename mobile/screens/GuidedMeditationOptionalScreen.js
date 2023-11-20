@@ -16,10 +16,12 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
     "Gratitude",
     "Loving-Kindness",
     "Kriya meditation",
-    "Transcendental",
-    "Visualization",
+    "Insight Meditation",
     "Vipassana",
     "Mindful Walking",
+    "Mantra Meditation",
+    "Body Scan",
+    "Chakra Meditation",
   ];
   const [technique, setTechnique] = useState("");
   const [inputStyle, setInputStyle] = useState(styles.textInput);
@@ -52,7 +54,7 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
         Which meditation type{"\n"}would you like to try?
       </Text>
       <TextInput
-        placeholder="Please select one (Optional)"
+        placeholder="Please select one or type your own..."
         style={inputStyle}
         value={technique}
         placeholderTextColor="#B9B9B9"
@@ -79,9 +81,17 @@ function GuidedMeditationOptionalScreen({ route, navigation }) {
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Duration", {
-            technique: technique,
-          });
+          if (technique === "") {
+            setInputStyle({
+              ...styles.textInput,
+              borderColor: "red",
+              borderWidth: 3,
+            });
+          } else {
+            navigation.navigate("Duration", {
+              technique: technique,
+            });
+          }
         }}
         style={styles.buttonContainer}
       >
@@ -123,7 +133,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: "30%",
     alignItems: "center",
-    marginBottom: 30,
   },
   buttonText: {
     fontSize: 16,

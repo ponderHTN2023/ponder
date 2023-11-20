@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   cardDescription: {
     fontSize: 16,
     marginBottom: 24,
+    // fontFamily: "Lato-Regular",
     color: "white",
     textAlign: "left",
   },

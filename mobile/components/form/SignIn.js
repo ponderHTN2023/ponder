@@ -19,7 +19,7 @@ export default function SignInForm({ navigation }) {
   const validateForm = () => {
     setEmailErr(false);
     setPasswordErr(false);
-    const title = "Oops! Sign In Hiccup 🧘‍♂️";
+    const title = "Oops! 🧘‍♂️";
     if (emailAddress === "") {
       Alert.alert(title, "Email Address is required.");
       setEmailErr(true);
@@ -56,7 +56,7 @@ export default function SignInForm({ navigation }) {
       setEmailErr(true);
       setPasswordErr(true);
       Alert.alert(
-        "Oops! Sign In Hiccup 🧘‍♂️",
+        "Oops! 🧘‍♂️",
         err.errors && err.errors.length > 0
           ? err.errors[0].message
           : "Your email address or password is incorrect. Please try again."

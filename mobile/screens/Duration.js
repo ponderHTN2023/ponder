@@ -20,10 +20,13 @@ const Duration = ({ route, navigation }) => {
       <TouchableOpacity
         style={{ position: "absolute", top: 60, left: 20 }}
         onPress={() =>
-          navigation.navigate("GuidedMeditationOptional", {
-            emotion,
-            technique,
-          })
+          navigation.navigate(
+            emotion ? "GuidedMeditation" : "GuidedMeditationOptional",
+            {
+              emotion,
+              technique,
+            }
+          )
         }
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>

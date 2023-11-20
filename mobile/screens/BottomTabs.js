@@ -21,6 +21,7 @@ import TimerTab from "../components/tabs/TimerTab";
 import { MaterialIcons } from "@expo/vector-icons";
 import ProfileTab from "../components/tabs/ProfileTab";
 import CommunityTab from "../components/tabs/CommunityTab";
+import HistoryTab from "../components/tabs/HistoryTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -125,8 +126,8 @@ export default function BottomTabs() {
           }}
         /> */}
         <Tab.Screen
-          name="Challenges"
-          component={ChallengesTab}
+          name="History"
+          component={HistoryTab}
           options={{
             tabBarShowLabel: false,
             tabBarIcon: ({ focused }) => {

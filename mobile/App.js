@@ -54,7 +54,11 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        // await Font.loadAsync(Roboto.font);
+        await Font.loadAsync(
+          "Lato-Regular",
+          require("./assets/Lato-Regular.ttf")
+        );
+        await Font.loadAsync("Lato-Bold", require("./assets/Lato-Bold.ttf"));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -160,6 +164,7 @@ export default function App() {
                   headerShown: false,
                   title: "Meditation Timer",
                   presentation: "modal",
+                  gestureEnabled: false,
                 }}
               />
               <Stack.Screen

@@ -32,16 +32,7 @@ export default function HomeTab() {
           justifyContent: "center",
         }}
       >
-        <Text
-          style={{
-            color: "white",
-            fontSize: 24,
-            display: "flex",
-            marginBottom: 20,
-            fontWeight: "500",
-            textAlign: "center",
-          }}
-        >
+        <Text style={styles.title}>
           {/* current weekday */}
           Happy{" "}
           {
@@ -62,37 +53,22 @@ export default function HomeTab() {
         onPress={() => navigation.navigate("MeditationOptions")}
       />
       <Card
-        title="Weekly Challenges"
+        title="Self-Guided Meditation"
+        description={`Set your ideal meditation duration and immerse yourself in stillness without a guide.`}
+        buttonText="Start Timer"
+        color="#7000E0"
+        buttonColor="rgba(29, 0, 65, 0.49)"
+        onPress={() => navigation.navigate("Timer")}
+      />
+      <Card
+        title="Session History"
         description={
-          <View style={{ color: "white" }}>
-            <Text
-              style={{
-                textDecorationLine: "underline",
-                fontWeight: "500",
-                fontSize: 16,
-                marginBottom: 8,
-                color: "white",
-              }}
-            >
-              Self-Compassion Practice
-            </Text>
-            <Text
-              style={{ color: "white", fontSize: 16 }}
-            >{`Write a letter of self-compassion to yourself, acknowledging your strengths and forgiving your imperfections.`}</Text>
-          </View>
+          "Revisit and replay your past meditations. Track your progress and favorite moments with ease."
         }
         buttonText="View All"
         color="#7000E0"
         buttonColor="rgba(29, 0, 65, 0.49)"
-        onPress={() => navigation.navigate("Challenges")}
-      />
-      <Card
-        title="Meditation Timer"
-        description={`Set your ideal meditation duration and immerse yourself in stillness.`}
-        buttonText="Start"
-        color="#7000E0"
-        buttonColor="rgba(29, 0, 65, 0.49)"
-        onPress={() => navigation.navigate("Timer")}
+        onPress={() => navigation.navigate("History")}
       />
     </ScrollView>
   );
@@ -104,6 +80,14 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 20,
     backgroundColor: "#2A0060",
+  },
+  title: {
+    color: "white",
+    fontSize: 24,
+    display: "flex",
+    marginBottom: 20,
+    fontWeight: "500",
+    textAlign: "center",
   },
   card: {
     borderRadius: 20,

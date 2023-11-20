@@ -12,6 +12,7 @@ import { StateContext } from "../../context/state";
 import { Ionicons } from "@expo/vector-icons";
 import SessionCard from "../SessionCard";
 import { useAuth } from "@clerk/clerk-react";
+import SessionItem from "../SessionItem";
 
 const ProfileTab = ({ route, navigation }) => {
   const [user, setUser] = useContext(StateContext);
@@ -84,20 +85,38 @@ const ProfileTab = ({ route, navigation }) => {
           </View>
         </TouchableOpacity>
         <View>
-          <Text style={styles.historyTitle}>Session history</Text>
           <View style={styles.listContainer}>
-            {user.sessions.map((item) => (
-              <SessionCard
+            <Text style={styles.historyTitle}>Session history</Text>
+            {user.sessions.slice(0, 3).map((item) => (
+              <SessionItem
                 key={item.id}
                 id={item.id}
-                date={item?.created_at}
                 duration={item.duration}
                 name={item.name}
                 emotion={item.emotion}
                 technique={item.technique}
                 description={item.description}
+                uri={item.uri}
+                onPress={() => {
+                  if (item.uri) {
+                    navigation.navigate("GuidedMeditationTimer", {
+                      emotion: item.emotion,
+                      technique: item.technique,
+                      sessionUri: item.uri,
+                      duration: item.duration,
+                    });
+                  }
+                }}
               />
             ))}
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity
+                style={{ ...styles.sessionButton, marginTop: 20 }}
+                onPress={() => navigation.navigate("History")}
+              >
+                <Text style={styles.sessionText}>View All</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -120,9 +139,16 @@ const styles = StyleSheet.create({
     width: "85%",
     marginBottom: 30,
   },
+  sessionButton: {
+    padding: 10,
+    alignItems: "center",
+    width: 217,
+    borderRadius: 20,
+    backgroundColor: "#7000E0",
+  },
   listContainer: {
-    width: "85%",
     marginBottom: 30,
+    marginHorizontal: 20,
   },
   header: {
     flexDirection: "row",
@@ -165,11 +191,10 @@ const styles = StyleSheet.create({
     color: "white",
   },
   historyTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     color: "white",
     marginBottom: 20,
-    textAlign: "center",
   },
   statTitle: {
     fontSize: 12,
@@ -195,6 +220,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     color: "white",
+  },
+  sessionText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 18,
+    textAlign: "left",
   },
 });
 
