@@ -25,7 +25,7 @@ import HistoryTab from "../components/tabs/HistoryTab";
 
 const Tab = createBottomTabNavigator();
 
-export default function BottomTabs() {
+export default function BottomTabs({ onLayout }) {
   const { isLoaded, isSignedIn, user: authUser } = useUser();
   const [user, setUser] = useContext(StateContext);
 
@@ -52,14 +52,17 @@ export default function BottomTabs() {
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.loadingContainer}>
+      <SafeAreaView style={styles.loadingContainer} onLayout={onLayout}>
         <Loading />
       </SafeAreaView>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#2A0060", paddingTop: 40 }}>
+    <View
+      style={{ flex: 1, backgroundColor: "#2A0060", paddingTop: 40 }}
+      onLayout={onLayout}
+    >
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: { height: 60 },

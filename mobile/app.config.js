@@ -1,6 +1,6 @@
 module.exports = {
   name: "ponder",
-  version: "1.0.1",
+  version: "1.0.2",
   expo: {
     splash: {
       image: "./assets/splash.png",
@@ -12,20 +12,20 @@ module.exports = {
         projectId: "112b6286-fd51-419f-8ed3-ba1deb682716",
       },
       clerkPublishableKey:
-        process.env.EXPO_PUBLIC_ENVIRONMENT === "PROD"
-          ? "pk_live_Y2xlcmsudXNlcG9uZGVyLmFwcCQ"
-          : "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA",
+        process.env.EXPO_PUBLIC_ENVIRONMENT === "DEV"
+          ? "pk_test_c2tpbGxlZC1wb3NzdW0tNTUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+          : "pk_live_Y2xlcmsudXNlcG9uZGVyLmFwcCQ",
       serverUrl:
-        process.env.EXPO_PUBLIC_ENVIRONMENT === "PROD"
-          ? "https://www.useponder.app:8000"
-          : "http://localhost:8000",
+        process.env.EXPO_PUBLIC_ENVIRONMENT === "DEV"
+          ? "http://localhost:8000"
+          : "https://www.useponder.app:8000",
       isProd: process.env.EXPO_PUBLIC_ENVIRONMENT === "PROD",
     },
     assetBundlePatterns: ["**/*"],
     ios: {
       bundleIdentifier: "app.useponder.ponder",
       supportsTablet: true,
-      buildNumber: "2",
+      buildNumber: "3",
     },
     android: {
       package: "app.useponder.ponder",

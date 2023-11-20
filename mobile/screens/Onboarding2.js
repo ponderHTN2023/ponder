@@ -55,10 +55,10 @@ const Onboarding2 = ({ navigation }) => {
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Onboarding3")}
+          onPress={() => navigation.navigate("BottomTabs")}
           style={styles.buttonContainer}
         >
-          <Text style={styles.buttonText}>Next</Text>
+          <Text style={styles.buttonText}>Start Meditating</Text>
         </TouchableOpacity>
 
         <Image source={require("../assets/dots2.png")} style={styles.dots} />

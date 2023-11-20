@@ -24,6 +24,7 @@ import MeditationOptions from "./screens/MeditationOptions";
 import Splash from "./screens/Splash";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
+import * as SecureStore from "expo-secure-store";
 // import { init } from "@amplitude/analytics-react-native";
 
 // init("11730c6a5e11a86665fd13918f3a20a6", "seb7wake@amplitude.com");
@@ -117,13 +118,16 @@ export default function App() {
               />
               <Stack.Screen
                 name="BottomTabs"
-                component={BottomTabs}
                 options={{
                   headerShown: false,
                   gestureEnabled: false,
                   animation: "slide_from_left",
                 }}
-              />
+              >
+                {(props) => (
+                  <BottomTabs {...props} onLayout={onLayoutRootView} />
+                )}
+              </Stack.Screen>
               <Stack.Screen
                 name="MeditationOptions"
                 component={MeditationOptions}
