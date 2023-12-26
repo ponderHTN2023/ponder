@@ -4,13 +4,13 @@ from pydub import AudioSegment
 import requests
 import os
 from google.cloud import texttospeech, storage
-from bark import SAMPLE_RATE, generate_audio, preload_models
+# from bark import SAMPLE_RATE, generate_audio, preload_models
 import uuid
-from scipy.io.wavfile import write as write_wav
-import nltk
-import numpy as np
-import time
-import io
+# from scipy.io.wavfile import write as write_wav
+# import nltk
+# import numpy as np
+# import time
+# import io
 from openai import OpenAI
 from pathlib import Path
 
@@ -18,9 +18,10 @@ from pathlib import Path
 
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
+        duration = request.data.get("duration", 60)*1000
         meditation = self.generate_v2(request.data)
         # url = self.openai_tts(meditation, break_length)
-        url = self.openai_tts_v2(meditation, request.data.get("duration", 60)*1000)
+        url = self.openai_tts_v2(meditation, duration)
         # url = self.google_cloud_tts(meditation, break_length)
         print("meditation url:", url)
         return Response({"meditation": url})
@@ -102,9 +103,9 @@ class GenerateMeditationView(APIView):
 
 
         if data.get("emotion") and not data.get("technique"):
-            prompt = self.emotion_2(data, num_lines)
+            prompt = self.emotion_2(data, num_lines, data['duration'])
         elif data.get("technique") and not data.get("emotion"):
-            prompt = self.technique(data, num_lines)
+            prompt = self.technique(data, num_lines, data['duration'])
         print("sending request...")
         print("prompt:", prompt, "\n\n")
         return self.generate_meditation(prompt)
@@ -129,14 +130,14 @@ class GenerateMeditationView(APIView):
         print("response length:", len(res))
         return res + " The guru is within you."
     
-    def technique(self, data, num_lines):
-        chars = num_lines * 60
+    def technique(self, data, num_lines, duration):
         prompt = (f"As a meditation guide specialized in {data.get('technique')}, "
           "craft a detailed script for a session. "
           f"Your script should be comprised of {num_lines} thoughtfully constructed sentences. Each sentence should be separated by the \\n character. \n"
           "Begin with an engaging introduction that eases the participant into the meditation, "
           f"gradually guide them through the stages or steps typical of the {data.get('technique')} technique, "
           "and conclude with a gentle closure that leaves the participant in a state of calm and mindfulness.\n"
+          f"There will be about {duration - num_lines*20} seconds between each sentence spoken.\n"
           "Ensure that each instruction or sentence is presented on a new line, adhering to the following format:\n"
           "Example introductory sentence.\n"
           "Followed by a technique-focused guiding sentence.\n"
@@ -145,7 +146,6 @@ class GenerateMeditationView(APIView):
         return prompt          
     
     def emotion_1(self, data, num_lines):
-        chars = num_lines * 60
         prompt = f"""
         Craft a unique guided meditation script focused on the emotion: {data.get('emotion')}. 
         The script should consist of around {num_lines} sentences, including spaces and punctuation.
@@ -170,7 +170,7 @@ class GenerateMeditationView(APIView):
         """
         return prompt
     
-    def emotion_2(self, data, num_lines):
+    def emotion_2(self, data, num_lines, duration):
         prompt = f"""
             Develop a guided meditation script centered on the emotion: {data.get('emotion')}.
             The script should comprise exactly {num_lines} sentences.
@@ -181,6 +181,7 @@ class GenerateMeditationView(APIView):
             - Each sentence should begin on a new line, separated by the new line character.
             - Progressively deepen the meditation, providing clear and concise instructions.
             - Conclude with a sentence or two offering closure, reassurance, or a positive affirmation. This section should help transition the listener back to their surroundings, carrying the tranquility or insight from the meditation into their day.
+            - There will be about {duration - num_lines*20} seconds between each sentence spoken.
 
             Guidelines:
             - Total length: Strictly {num_lines} sentences. Each sentence should be on a new line.
@@ -199,9 +200,9 @@ class GenerateMeditationView(APIView):
     
     def get_json(self, prompt):
         return {
-            "model": "gpt-3.5-turbo-1106",
+            "model": "gpt-4-1106-preview",
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": 1.2,
+            "temperature": 0.7,
         }
         
     
@@ -223,36 +224,36 @@ class GenerateMeditationView(APIView):
         print("File uploaded to meditation-bucket")
         return blob.public_url
     
-    def bark_tts(self, meditation):
-        # download and load all models
-        preload_models()
-        nltk.download("punkt")
-        # generate audio from text
-        #  "As you exhale, let go of any tension or worry in your body. Feel yourself becoming more relaxed with each breath."
-        text_prompt = (
-            "Close your eyes and take a deep breath. Imagine yourself standing confidently in front of your audience, feeling calm and composed."
-            + "Visualize each step of your presentation, from the opening remarks to your final slide."
-            + "Feel an overwhelming sense of confidence and know that you are well-prepared."
-            + "Allow any nervousness or anxiety to melt away as you focus your mind on your knowledge and expertise. "
-            + 'Repeat the mantra, "I am prepared, I am confident, I am capable.". '
-            + "Open your eyes, feeling rejuvenated and ready to tackle your presentation with ease and grace."
-        )
-        sentences = nltk.sent_tokenize(text_prompt)
-        silence = np.zeros(int(5 * SAMPLE_RATE))
-        last_silence = np.zeros(int(10 * SAMPLE_RATE))
-        speaker = "v2/en_speaker_3"
-        pieces = []
-        for i, sentence in enumerate(sentences):
-            audio_array = generate_audio(sentence, history_prompt=speaker)
-            if i == len(sentences) - 2:
-                pieces += [audio_array, last_silence.copy()]
-            else:
-                pieces += [audio_array, silence.copy()]
-        audio = np.concatenate(pieces)
-        # speech_array = generate_audio(text_prompt, history_prompt=speaker)
+    # def bark_tts(self, meditation):
+    #     # download and load all models
+    #     preload_models()
+    #     nltk.download("punkt")
+    #     # generate audio from text
+    #     #  "As you exhale, let go of any tension or worry in your body. Feel yourself becoming more relaxed with each breath."
+    #     text_prompt = (
+    #         "Close your eyes and take a deep breath. Imagine yourself standing confidently in front of your audience, feeling calm and composed."
+    #         + "Visualize each step of your presentation, from the opening remarks to your final slide."
+    #         + "Feel an overwhelming sense of confidence and know that you are well-prepared."
+    #         + "Allow any nervousness or anxiety to melt away as you focus your mind on your knowledge and expertise. "
+    #         + 'Repeat the mantra, "I am prepared, I am confident, I am capable.". '
+    #         + "Open your eyes, feeling rejuvenated and ready to tackle your presentation with ease and grace."
+    #     )
+    #     sentences = nltk.sent_tokenize(text_prompt)
+    #     silence = np.zeros(int(5 * SAMPLE_RATE))
+    #     last_silence = np.zeros(int(10 * SAMPLE_RATE))
+    #     speaker = "v2/en_speaker_3"
+    #     pieces = []
+    #     for i, sentence in enumerate(sentences):
+    #         audio_array = generate_audio(sentence, history_prompt=speaker)
+    #         if i == len(sentences) - 2:
+    #             pieces += [audio_array, last_silence.copy()]
+    #         else:
+    #             pieces += [audio_array, silence.copy()]
+    #     audio = np.concatenate(pieces)
+    #     # speech_array = generate_audio(text_prompt, history_prompt=speaker)
 
-        # play text in notebook
-        write_wav(Path(__file__).parent.parent / "assets/meditation_speaker_3.wav", SAMPLE_RATE, audio)
+    #     # play text in notebook
+    #     write_wav(Path(__file__).parent.parent / "assets/meditation_speaker_3.wav", SAMPLE_RATE, audio)
 
     def google_cloud_tts(self, meditation, break_length):
         print("meditation result:", meditation)

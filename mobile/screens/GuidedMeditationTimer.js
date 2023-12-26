@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 import { Asset } from "expo-asset";
 import { StateContext } from "../context/state";
 import { createMeditation, saveMeditation } from "../api/meditation";
@@ -64,6 +64,8 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
           playsInSilentModeIOS: true,
           staysActiveInBackground: true,
           shouldDuckAndroid: true,
+          interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+          interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
         });
 
         const soundInstance = new Audio.Sound();
@@ -187,7 +189,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       setUser({
         ...user,
         minMeditated:
-          user.minMeditated + +Math.floor((duration - remainingTime) / 60),
+          user.minMeditated + Math.floor((duration - remainingTime) / 60),
         numMeditations: user.numMeditations + 1,
         avgDuration: Math.floor(
           (user.avgDuration * user.numMeditations +
