@@ -5,7 +5,7 @@ django
 django-filter
 python-dotenv
 dj_database_url
-psycopg2-binary
+psycopg2==2.8.3
 django-storages
 requests
 wheel
@@ -17,3 +17,8 @@ google-cloud-texttospeech
 google-cloud-storage
 openai
 pydub
+docutils==0.15.2
+gunicorn==19.9.0
+jmespath==0.9.4
+sqlparse==0.3.0
+urllib3==1.25.6
