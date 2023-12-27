@@ -40,6 +40,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split()
 
 CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST").split()
 
+STATIC_ROOT = 'static/'
+
 
 # Application definition
 
