@@ -210,8 +210,10 @@ class GenerateMeditationView(APIView):
     def upload_to_gc_bucket(self, filename = "app/assets/meditation.mp3"):
         # Explicitly use service account credentials by specifying the private key
         # file.
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        print("base dir:", BASE_DIR)
         storage_client = storage.Client.from_service_account_json(
-            "../server/credentials.json"
+            os.path.join(BASE_DIR, "credentials.json")
         )
 
         # Make an authenticated API request
