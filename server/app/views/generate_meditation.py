@@ -59,10 +59,10 @@ class GenerateMeditationView(APIView):
             print(t)
 
         # out_file = Path(__file__).parent / f"assets/speech.mp3"
-        out_file = os.path.join(Path(__file__).resolve().parent, "assets/speech.mp3")
+        out_file = os.path.join(Path(__file__).resolve().parent.parent, "assets/speech.mp3")
         speech = []
         for i, content in enumerate(text):
-            speech_file_path = os.path.join(Path(__file__).resolve().parent, "assets/speech{i}.mp3")
+            speech_file_path = os.path.join(Path(__file__).resolve().parent.parent, "assets/speech{i}.mp3")
             response = client.audio.speech.create(model="tts-1", voice="shimmer", input=content, speed=0.85)
             response.stream_to_file(speech_file_path)
             speech.append(AudioSegment.from_mp3(speech_file_path))
