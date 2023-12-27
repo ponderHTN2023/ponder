@@ -4,6 +4,9 @@ from django.urls import path, include, re_path
 from django.urls import path
 from rest_framework import routers
 from app.views import GenerateMeditationView, ChallengeView, UserActivityView, ActivityDetailView, UserView, CommunityView, CommunityDetailView, CommunityUserView, CommunityUserDetailView
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -19,4 +22,4 @@ urlpatterns = [
     path("api/communities/user/<int:id>/", CommunityUserDetailView.as_view(), name="update_community_user"),
     path("api/users/<str:email>", UserView.as_view(), name="get_user"),
     path("api/users/", UserView.as_view(), name="create_user")
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
