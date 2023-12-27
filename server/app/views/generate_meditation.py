@@ -46,7 +46,7 @@ class GenerateMeditationView(APIView):
             speech.append(speech_break)
         final = sum(speech)
         final.export(out_file, format="mp3")
-        return self.upload_to_gc_bucket(filename=out_file)
+        return self.upload_to_gc_bucket(filename=str(out_file))
     
     def openai_tts_v2(self, text, duration):
         client = OpenAI(organization="org-NgV2YtGKKOa1OdQenbfTShXv", api_key=os.environ.get("OPENAI_API_KEY"))
@@ -79,7 +79,7 @@ class GenerateMeditationView(APIView):
 
         final = sum(result)
         final.export(out_file, format="mp3")
-        return self.upload_to_gc_bucket(filename=out_file)
+        return self.upload_to_gc_bucket(filename=str(out_file))
     
     
     def generate(self, data):
@@ -207,11 +207,12 @@ class GenerateMeditationView(APIView):
         
     
     # https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3
-    def upload_to_gc_bucket(self, filename = "app/assets/meditation.mp3"):
+    def upload_to_gc_bucket(self, filename):
         # Explicitly use service account credentials by specifying the private key
         # file.
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
         print("base dir:", BASE_DIR)
+        print("filename:", filename)
         storage_client = storage.Client.from_service_account_json(
             os.path.join(BASE_DIR, "credentials.json")
         )
