@@ -18,14 +18,17 @@ module.exports = {
       serverUrl:
         process.env.EXPO_PUBLIC_ENVIRONMENT === "DEV"
           ? "http://localhost:8000"
-          : "https://www.useponder.app:8000",
+          : "https://server.useponder.app",
       isProd: process.env.EXPO_PUBLIC_ENVIRONMENT === "PROD",
     },
     assetBundlePatterns: ["**/*"],
     ios: {
       bundleIdentifier: "app.useponder.ponder",
       supportsTablet: true,
-      buildNumber: "3",
+      buildNumber: "5",
+      infoPlist: {
+        UIBackgroundModes: ["audio"],
+      },
     },
     android: {
       package: "app.useponder.ponder",

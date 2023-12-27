@@ -5,6 +5,7 @@ ADD requirements.txt /app/requirements.txt
 RUN set -ex \
     && apk add --no-cache --virtual .build-deps postgresql-dev build-base \
     && python -m venv /env \
+    && apk add ffmpeg && \
     && /env/bin/pip install --upgrade pip \
     && /env/bin/pip install --no-cache-dir -r /app/requirements.txt \
     && runDeps="$(scanelf --needed --nobanner --recursive /env \
