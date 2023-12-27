@@ -43,10 +43,6 @@ CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST").split()
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
 
 # Application definition
 
