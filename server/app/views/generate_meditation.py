@@ -13,6 +13,7 @@ import uuid
 # import io
 from openai import OpenAI
 from pathlib import Path
+import logging
 
 
 
@@ -57,10 +58,11 @@ class GenerateMeditationView(APIView):
         for t in text:
             print(t)
 
-        out_file = Path(__file__).parent.parent / f"assets/speech.mp3"
+        out_file = Path(__file__).parent / f"assets/speech.mp3"
+        # BASE_DIR = os.path.join(Path(__file__).resolve().parent, "assets/speech.mp3")
         speech = []
         for i, content in enumerate(text):
-            speech_file_path = Path(__file__).parent.parent / f"assets/speech{i}.mp3"
+            speech_file_path = Path(__file__).parent / f"assets/speech{i}.mp3"
             response = client.audio.speech.create(model="tts-1", voice="shimmer", input=content, speed=0.85)
             response.stream_to_file(speech_file_path)
             speech.append(AudioSegment.from_mp3(speech_file_path))
@@ -79,7 +81,7 @@ class GenerateMeditationView(APIView):
 
         final = sum(result)
         final.export(out_file, format="mp3")
-        return self.upload_to_gc_bucket(filename=str(out_file))
+        return self.upload_to_gc_bucket(filename=out_file)
     
     
     def generate(self, data):
@@ -211,8 +213,8 @@ class GenerateMeditationView(APIView):
         # Explicitly use service account credentials by specifying the private key
         # file.
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
-        print("base dir:", BASE_DIR)
-        print("filename:", filename)
+        logging.info("base dir:", BASE_DIR)
+        logging.info("filename:", filename)
         storage_client = storage.Client.from_service_account_json(
             os.path.join(BASE_DIR, "credentials.json")
         )
