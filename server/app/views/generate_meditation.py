@@ -20,10 +20,9 @@ logger = logging.getLogger(__name__)
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
         duration = request.data.get("duration", 60)*1000
-        meditation = self.generate_v2(request.data)
-        # url = self.openai_tts(meditation, break_length)
-        url = self.openai_tts_v2(meditation, duration)
-        # url = self.google_cloud_tts(meditation, break_length)
+        meditation = self.generate(request.data)
+        url = self.openai_tts_v3(meditation, duration)
+        # url = self.openai_tts_v2(meditation, duration)
         print("meditation url:", url)
         return Response({"meditation": url})
     
@@ -83,29 +82,61 @@ class GenerateMeditationView(APIView):
         final.export(out_file, format="mp3")
         return self.upload_to_gc_bucket(filename=out_file)
     
+    def openai_tts_v3(self, text, duration):
+        client = OpenAI(organization="org-NgV2YtGKKOa1OdQenbfTShXv", api_key=os.environ.get("OPENAI_API_KEY"))
+        text = text.split("\n")
+        text = [line for line in text if line not in ["", " ", "\n"]]
+        index = 0
+
+        breaks = []
+        while index < len(text):
+            if text[index][0] == "[":
+                pause = text.pop(index).replace("[", "").replace("]", "")
+                breaks.append(int(pause)*1000)
+            else:
+                index += 1
+        if len(breaks) == len(text):
+            breaks = breaks[:-1]
+
+        text[-1] += " The guru is within you."
+
+        # out_file = Path(__file__).parent / f"assets/speech.mp3"
+        out_file = os.path.join(Path(__file__).resolve().parent.parent, "assets/speech.mp3")
+        speech = []
+        for i, content in enumerate(text):
+            speech_file_path = os.path.join(Path(__file__).resolve().parent.parent, "assets/speech{i}.mp3")
+            response = client.audio.speech.create(model="tts-1", voice="shimmer", input=content, speed=0.85)
+            response.stream_to_file(speech_file_path)
+            speech.append(AudioSegment.from_mp3(speech_file_path))
+        
+        total_speech_length = sum([len(s) for s in speech]) + sum(breaks)
+        difference = (total_speech_length - duration) / len(breaks)
+        for i in range(len(breaks)):
+            breaks[i] -= difference
+            if breaks[i] < 0 and difference > 0:
+                num_breaks_left = len(breaks[i+1:]) if i < len(breaks) - 1 else 1
+                missed = abs(breaks[i]) / num_breaks_left
+                difference = missed
+                breaks[i] = 0
+
+        result = []
+        for i in range(len(speech)):
+            result.append(speech[i])
+            if i < len(speech) - 1:
+                speech_break = AudioSegment.silent(duration=breaks[i])  
+                result.append(speech_break)
+
+        final = sum(result)
+        final.export(out_file, format="mp3")
+        return self.upload_to_gc_bucket(filename=out_file)
     
     def generate(self, data):
-        divisor = (8 + (data['duration']//60)*2) if data['duration'] > 60 else 8
-        if (data['duration']//60) >= 5:
-            divisor = (10 + (data['duration']//60)*2)
-        num_lines = data['duration']//divisor
-        if data.get("emotion") and not data.get("technique"):
-            prompt = self.emotion_2(data, num_lines)
-        elif data.get("technique") and not data.get("emotion"):
-            prompt = self.technique_2(data, num_lines)
-        print("sending request...")
-        print("prompt:", prompt, "\n\n")
-        return self.generate_meditation(prompt)
-    
-    def generate_v2(self, data):
         # num_lines = 3 + ((data['duration'] // 60) + 1) // 2
         print(data['duration'])
         num_lines = 2 + (data['duration'] // 60)
         print("num lines:", num_lines)
-
-
         if data.get("emotion") and not data.get("technique"):
-            prompt = self.emotion_2(data, num_lines, data['duration'])
+            prompt = self.emotion_with_breaks(data, data['duration'])
         elif data.get("technique") and not data.get("emotion"):
             prompt = self.technique(data, num_lines, data['duration'])
         print("sending request...")
@@ -130,7 +161,8 @@ class GenerateMeditationView(APIView):
                 "error": "Sorry, I couldn't generate a meditation for you. Please try again."
             }
         print("response length:", len(res))
-        return res + " The guru is within you."
+        print("response:", res )
+        return res
     
     def technique(self, data, num_lines, duration):
         prompt = (f"As a meditation guide specialized in {data.get('technique')}, "
@@ -198,6 +230,39 @@ class GenerateMeditationView(APIView):
             The script should be empathetic towards the emotion: {data.get('emotion')}, and consistently apply the chosen meditation technique, adhering to the format and sentence count.
         """
         return prompt
+    
+    def emotion_with_breaks(self, data, duration):
+        prompt = f"""
+            Develop a guided meditation script centered on the emotion: {data.get('emotion')}.
+            The script should be exactly {duration} seconds in length with ample time for pauses.
+
+            Structure:
+            - Start with a comforting introduction that acknowledges the emotion of {data.get("emotion")}, setting a tone of acceptance and understanding. This section should ease them into the meditation and explore solutions to issues with this state.
+            - Follow with sentences that guide the listener through a meditation technique suitable for the emotion. Techniques can include breath awareness, noting, resting awareness, body scanning, visualization, reflection, loving-kindness, chakra, mantra, focused attention, skillful compassion, or any other appropriate method geared toward the emotion.
+            - Each short paragraph should begin on a new line, followed by a note indicating the break length in seconds on the next line.
+            - Progressively deepen the meditation, providing clear and concise instructions.
+            - Conclude with a sentence or two offering closure, reassurance, or a positive affirmation. This section should help transition the listener back to their surroundings, carrying the tranquility or insight from the meditation into their day.
+
+            Guidelines:
+            - Total length: Strictly less than {duration} seconds (including both script and break length). Keep in mind that every word takes about 0.5 seconds.
+            - Break lengths between short paragraphs should range from 0 seconds to 120 seconds, depending on the  meditation and script. 
+            - Longer breaks with longer paragraphs are preferred over short breaks and many verses.
+            - Each verse of the meditation should be on a new line. The break length in seconds will be on the next line within square brackets. For example, a 5 second break would look like: [5]
+            - Only 1-3 different meditation techniques should be used in a single meditation.
+            - Avoiding overly complex imagery.
+
+            Example Format:
+            Introduction sentence that recognizes the emotion of {data.get('emotion')} and eases into the meditation. Begin by finding a comfortable sitting position. Gently close your eyes and take a deep breath in... and out. Notice the rise and fall of your chest with each breath.
+            [40]
+            Now, let's focus on the present moment. Acknowledge any thoughts or feelings without judgment, simply letting them pass like clouds in the sky.
+            [60]
+            As we end, take one more deep breath, feeling more relaxed and centered. Gently open your eyes when you're ready.
+
+            
+            The script should be empathetic towards the emotion: {data.get('emotion')}, and consistently apply the chosen meditation technique, adhering to the format and guidelines.
+        """
+        return prompt
+
 
     
     def get_json(self, prompt):
@@ -213,8 +278,6 @@ class GenerateMeditationView(APIView):
         # Explicitly use service account credentials by specifying the private key
         # file.
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
-        logger.info("base dir:", BASE_DIR)
-        logger.info("filename:", filename)
         storage_client = storage.Client.from_service_account_json(
             os.path.join(BASE_DIR, "credentials.json")
         )
