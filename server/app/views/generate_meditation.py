@@ -233,7 +233,7 @@ class GenerateMeditationView(APIView):
     
     def emotion_with_breaks(self, data, duration):
         prompt = f"""
-            Develop a guided meditation script centered on the emotion: {data.get('emotion')}.
+            Develop a guided meditation script centered on the emotion or situation: {data.get('emotion')}.
             The script should be exactly {duration} seconds in length with ample time for pauses.
 
             Structure:
@@ -261,7 +261,7 @@ class GenerateMeditationView(APIView):
             Conclusion of the meditation. Help being them back to the present and relax their mind after the meditation. Remind them to bring this state with them through their day.
 
             
-            The script should be empathetic towards the emotion: {data.get('emotion')}, and consistently apply the chosen meditation technique, adhering to the format and guidelines.
+            The script should be empathetic towards the emotion/situation: {data.get('emotion')}, and consistently apply the chosen meditation technique, adhering to the format and guidelines.
         """
         return prompt
 
