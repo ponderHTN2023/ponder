@@ -13,7 +13,7 @@ import uuid
 # import io
 from openai import OpenAI
 from pathlib import Path
-import logging
+import logging.config
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +161,8 @@ class GenerateMeditationView(APIView):
                 "error": "Sorry, I couldn't generate a meditation for you. Please try again."
             }
         print("response length:", len(res))
-        print("response:", res )
+        print("meditation:", res)
+        logger.info("response:", res)
         return res
     
     def technique(self, data, num_lines, duration):
