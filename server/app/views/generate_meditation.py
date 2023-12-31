@@ -271,7 +271,7 @@ class GenerateMeditationView(APIView):
         return {
             "model": "gpt-4-1106-preview",
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.7,
+            "temperature": 0.8,
         }
         
     
