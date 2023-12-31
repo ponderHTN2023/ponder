@@ -161,8 +161,7 @@ class GenerateMeditationView(APIView):
                 "error": "Sorry, I couldn't generate a meditation for you. Please try again."
             }
         print("response length:", len(res))
-        print("meditation:", res)
-        logger.info("response:", res)
+        logger.info(res)
         return res
     
     def technique(self, data, num_lines, duration):
@@ -249,15 +248,17 @@ class GenerateMeditationView(APIView):
             - Break lengths between short paragraphs should range from 0 seconds to 120 seconds, depending on the  meditation and script. 
             - Longer breaks with longer paragraphs are preferred over short breaks and many verses.
             - Each verse of the meditation should be on a new line. The break length in seconds will be on the next line within square brackets. For example, a 5 second break would look like: [5]
-            - Only 1-3 different meditation techniques should be used in a single meditation.
+            - Only 1-2 different meditation techniques should be used in a single meditation.
             - Avoiding overly complex imagery.
 
             Example Format:
-            Introduction sentence that recognizes the emotion of {data.get('emotion')} and eases into the meditation. Begin by finding a comfortable sitting position. Gently close your eyes and take a deep breath in... and out. Notice the rise and fall of your chest with each breath.
+            Multiple sentences as an introduction. Recognize the emotion and allow them to settle into their space and mind. Begin by shutting eyes and taking deep breaths.
+            [25]
+            Guiding them through the meditation technique. Use a specific meditation technique specifc to their emotion or situation.
             [40]
-            Now, let's focus on the present moment. Acknowledge any thoughts or feelings without judgment, simply letting them pass like clouds in the sky.
-            [60]
-            As we end, take one more deep breath, feeling more relaxed and centered. Gently open your eyes when you're ready.
+            Continue with meditation technique. Let them know that thoughts will arise and help them come back to the meditation. Continue to bring them deeper into meditation.
+            [30]
+            Conclusion of the meditation. Help being them back to the present and relax their mind after the meditation. Remind them to bring this state with them through their day.
 
             
             The script should be empathetic towards the emotion: {data.get('emotion')}, and consistently apply the chosen meditation technique, adhering to the format and guidelines.
