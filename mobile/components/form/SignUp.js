@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { createUser } from "../../api/user";
 import { useSignUp, useAuth, useUser } from "@clerk/clerk-react";
+import { track, identify, Identify } from "@amplitude/analytics-react-native";
 
 export default function SignUpForm({ navigation }) {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -49,11 +50,19 @@ export default function SignUpForm({ navigation }) {
       // });
 
       navigation.navigate("Onboarding");
-
+      const identifyObj = new Identify();
+      identifyObj.set("email", emailAddress);
+      identifyObj.set("name", name);
+      identify(identifyObj);
+      const eventProperties = {
+        email: emailAddress,
+        name,
+      };
+      track("SignUp", eventProperties);
       // await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       // setPendingVerification(true);
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
       Alert.alert(
         "Oops! Invalid Email 🧘‍♂️",
         err.errors && err.errors.length > 0

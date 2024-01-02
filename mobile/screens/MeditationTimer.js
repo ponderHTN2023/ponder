@@ -15,6 +15,7 @@ import { Asset } from "expo-asset";
 import { saveMeditation } from "../api/meditation";
 import { StateContext } from "../context/state";
 import Loading from "../components/Loading";
+import { track } from "@amplitude/analytics-react-native";
 
 const MeditationTimer = ({ route, navigation }) => {
   const DURATION =
@@ -129,6 +130,11 @@ const MeditationTimer = ({ route, navigation }) => {
     if (sound) {
       await sound.stopAsync();
       setIsPlaying(false);
+      track("Meditation", {
+        duration: timeSpent,
+        totalDuration: timeSpent,
+        type: "Unguided",
+      });
       trackMeditation();
     }
     navigation.goBack();

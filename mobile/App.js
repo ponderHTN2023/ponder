@@ -25,9 +25,9 @@ import Splash from "./screens/Splash";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import * as SecureStore from "expo-secure-store";
-// import { init } from "@amplitude/analytics-react-native";
+import { init } from "@amplitude/analytics-react-native";
 
-// init("11730c6a5e11a86665fd13918f3a20a6", "seb7wake@amplitude.com");
+init("7f2b4cdac5b19ba89c3d35b0243d12ae");
 
 const tokenCache = {
   async getToken(key) {

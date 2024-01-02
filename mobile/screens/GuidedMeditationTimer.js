@@ -16,9 +16,10 @@ import { Asset } from "expo-asset";
 import { StateContext } from "../context/state";
 import { createMeditation, saveMeditation } from "../api/meditation";
 import Loading from "../components/Loading";
+import { track } from "@amplitude/analytics-react-native";
 
 const GuidedMeditationTimer = ({ route, navigation }) => {
-  const [duration, setDuration] = useState(route.params?.duration * 60 || 60);
+  const [duration, setDuration] = useState(route.params?.duration * 300 || 300);
   const { emotion, technique, sessionUri } = route.params;
   const [user, setUser] = useContext(StateContext);
   const [loading, setLoading] = useState(false);
@@ -184,6 +185,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
         technique: technique,
         uri: meditationUri,
         duration: duration - remainingTime,
+        total_duration: duration,
         name: "Guided",
       };
       setUser({
@@ -221,6 +223,13 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       setIsPlaying(false);
       console.log(duration - remainingTime);
     }
+    track("Meditation", {
+      duration: duration - remainingTime,
+      totalDuration: duration,
+      emotion: emotion,
+      technique: technique,
+      type: "Guided",
+    });
     trackMeditation();
   };
 

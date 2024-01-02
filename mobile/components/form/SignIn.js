@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useSignIn } from "@clerk/clerk-react";
+import { track, Identify, identify } from "@amplitude/analytics-react-native";
 
 export default function SignInForm({ navigation }) {
   const [emailAddress, setEmailAddress] = React.useState("");
@@ -50,6 +51,10 @@ export default function SignInForm({ navigation }) {
       // This is an important step,
       // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
+      const identifyObj = new Identify();
+      identifyObj.set("email", emailAddress);
+      identify(identifyObj);
+      track("SignIn", { email: emailAddress });
       navigation.navigate("BottomTabs");
     } catch (err) {
       console.log(err);
