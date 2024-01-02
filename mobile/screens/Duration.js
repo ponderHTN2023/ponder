@@ -48,7 +48,7 @@ const Duration = ({ route, navigation }) => {
           mode="dropdown"
           itemStyle={styles.pickerItem}
         >
-          {Array.from({ length: 10 }, (_, i) => i + 1).map((min) => (
+          {Array.from({ length: 11 }, (_, i) => i + 5).map((min) => (
             <Picker.Item key={min} label={String(min)} value={min} />
           ))}
         </Picker>
