@@ -103,6 +103,7 @@ class GenerateMeditationView(APIView):
         # out_file = Path(__file__).parent / f"assets/speech.mp3"
         out_file = os.path.join(Path(__file__).resolve().parent.parent, "assets/speech.mp3")
         speech = []
+        logger.info("Creating speech...")
         for i, content in enumerate(text):
             speech_file_path = os.path.join(Path(__file__).resolve().parent.parent, "assets/speech{i}.mp3")
             response = client.audio.speech.create(model="tts-1", voice="shimmer", input=content, speed=0.85)
@@ -119,6 +120,7 @@ class GenerateMeditationView(APIView):
                 difference = missed
                 breaks[i] = 0
 
+        logger.info("Stitching audio together...")
         result = []
         for i in range(len(speech)):
             result.append(speech[i])
@@ -128,6 +130,7 @@ class GenerateMeditationView(APIView):
 
         final = sum(result)
         final.export(out_file, format="mp3")
+        logger.info("Uploading to Google Cloud bucket")
         return self.upload_to_gc_bucket(filename=out_file)
     
     def generate(self, data):
@@ -291,7 +294,7 @@ class GenerateMeditationView(APIView):
         random_id = str(uuid.uuid4())
         blob = bucket.blob(f"meditation-{random_id}.mp3")
         blob.upload_from_filename(filename)
-        print("File uploaded to meditation-bucket")
+        logger.info(f"File uploaded to meditation-bucket with url: {blob.public_url}")
         return blob.public_url
     
     # def bark_tts(self, meditation):
