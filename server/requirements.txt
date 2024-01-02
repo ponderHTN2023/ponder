@@ -5,7 +5,7 @@ django
 django-filter
 python-dotenv
 dj_database_url
-psycopg2==2.8.3
+psycopg2==2.8.4
 django-storages
 requests
 wheel

@@ -250,6 +250,7 @@ class GenerateMeditationView(APIView):
             - Total length: Strictly less than {duration} seconds (including both script and break length). Keep in mind that every word takes about 0.5 seconds.
             - Break lengths between short paragraphs should range from 0 seconds to 120 seconds, depending on the  meditation and script. 
             - Longer breaks with longer paragraphs are preferred over short breaks and many verses.
+            - Only use the new line character as a delimiter between verses and breaks.
             - Each verse of the meditation should be on a new line. The break length in seconds will be on the next line within square brackets. For example, a 5 second break would look like: [5]
             - Only 1-2 different meditation techniques should be used in a single meditation.
             - Avoiding overly complex imagery.
