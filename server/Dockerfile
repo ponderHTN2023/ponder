@@ -24,4 +24,4 @@ ENV PATH /env/bin:$PATH
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "--timeout", "120", "server.wsgi:application"]
+CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "--timeout", "300", "server.wsgi:application"]
