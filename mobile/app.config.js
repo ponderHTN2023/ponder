@@ -25,7 +25,7 @@ module.exports = {
     ios: {
       bundleIdentifier: "app.useponder.ponder",
       supportsTablet: true,
-      buildNumber: "6",
+      buildNumber: "7",
       infoPlist: {
         UIBackgroundModes: ["audio"],
       },
