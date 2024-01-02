@@ -41,7 +41,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return response["uri"];
     } catch (error) {
-      console.error("Error generating meditation:", error);
+      console.error("Error generating meditation:", error.message);
       Alert.alert(
         "Oops! Meditation Hiccup",
         "Our meditation generator is taking a brief mindfulness break. Please give it a moment of peace and try again. 🧘‍♂️✨",
@@ -234,7 +234,7 @@ const GuidedMeditationTimer = ({ route, navigation }) => {
           <Text style={styles.crossButtonText}>✕</Text>
         </TouchableOpacity>
         <Loading
-          text={"Crafting meditation...\nThis could take up to a minute."}
+          text={"Crafting meditation...\nThis could take a few minutes."}
         />
       </SafeAreaView>
     );
