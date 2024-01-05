@@ -9,7 +9,7 @@
     "build:ios": "react-native bundle --entry-file='index.ios.js' --bundle-output='./ios/ponder/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
   },
   "dependencies": {
-    "@amplitude/analytics-react-native": "^1.4.5",
+    "@amplitude/analytics-react-native": "^1.4.7",
     "@clerk/clerk-expo": "^0.19.16",
     "@expo/metro-config": "^0.10.7",
     "@expo/vector-icons": "^13.0.0",
@@ -37,7 +37,7 @@
     "react-native-reanimated": "^3.5.4",
     "react-native-safe-area-context": "^4.7.4",
     "react-native-screens": "^3.27.0",
-    "react-native-svg": "13.9.0",
+    "react-native-svg": "^13.9.0",
     "react-native-util": "^1.0.2"
   },
   "devDependencies": {

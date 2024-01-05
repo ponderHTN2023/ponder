@@ -19,7 +19,7 @@ import Loading from "../components/Loading";
 import { track } from "@amplitude/analytics-react-native";
 
 const GuidedMeditationTimer = ({ route, navigation }) => {
-  const [duration, setDuration] = useState(route.params?.duration * 300 || 300);
+  const [duration, setDuration] = useState(route.params?.duration * 60 || 300);
   const { emotion, technique, sessionUri } = route.params;
   const [user, setUser] = useContext(StateContext);
   const [loading, setLoading] = useState(false);

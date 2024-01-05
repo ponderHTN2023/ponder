@@ -22,6 +22,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import ProfileTab from "../components/tabs/ProfileTab";
 import CommunityTab from "../components/tabs/CommunityTab";
 import HistoryTab from "../components/tabs/HistoryTab";
+import { identify, Identify } from "@amplitude/analytics-react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,12 @@ export default function BottomTabs({ onLayout }) {
   useEffect(() => {
     console.log("isLoaded and inside BottomTabs!!", user);
     if (isLoaded && isSignedIn && !user) {
+      const identifyObj = new Identify();
+      identifyObj.set(
+        "environment",
+        process.env.EXPO_PUBLIC_ENVIRONMENT === "DEV" ? "DEV" : "PROD"
+      );
+      identify(identifyObj);
       processUser();
     }
   }, [isLoaded]);
