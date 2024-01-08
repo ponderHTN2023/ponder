@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 
 class GenerateMeditationView(APIView):
     def post(self, request, format=None):
-        duration = request.data.get("duration", 60)*1000
         meditation = self.generate(request.data)
-        url = self.openai_tts_v3(meditation, duration)
+        duration_millis = request.data.get("duration", 60) * 1000
+        url = self.openai_tts_v3(meditation, duration_millis)
         # url = self.openai_tts_v2(meditation, duration)
         print("meditation url:", url)
         return Response({"meditation": url})
@@ -168,18 +168,38 @@ class GenerateMeditationView(APIView):
         return res
     
     def technique(self, data, num_lines, duration):
-        prompt = (f"As a meditation guide specialized in {data.get('technique')}, "
-          "craft a detailed script for a session. "
-          f"Your script should be comprised of {num_lines} thoughtfully constructed sentences. Each sentence should be separated by the \\n character. \n"
-          "Begin with an engaging introduction that eases the participant into the meditation, "
-          f"gradually guide them through the stages or steps typical of the {data.get('technique')} technique, "
-          "and conclude with a gentle closure that leaves the participant in a state of calm and mindfulness.\n"
-          f"There will be about {duration - num_lines*20} seconds between each sentence spoken.\n"
-          "Ensure that each instruction or sentence is presented on a new line, adhering to the following format:\n"
-          "Example introductory sentence.\n"
-          "Followed by a technique-focused guiding sentence.\n"
-          "Concluding with a soothing closing sentence.\n"
-          f"Remember, each sentence should vividly embody the essence and uniqueness of the {data.get('technique')} meditation technique.")
+        prompt = (f"""
+            Act as a meditation teacher. Craft a unique guided meditation script focused on the {data.get('technique')} meditation technique.
+            The script should be exactly {duration} seconds in length with ample time for pauses.
+
+            Structure:
+            - Begin with an engaging introduction that eases the participant into the meditation technique.
+            - Follow with lines that gradually guide the listener through the stages or steps typical of the {data.get('technique')} technique, providing clear and concise instructions.
+            - Progressively deepen the meditation.
+            - Conclude with a few sentences offering closure, reassurance, or a positive affirmation. This section should help transition the listener back to their surroundings, carrying this feeling into their day.
+
+            Guidelines:
+            - Total length: Strictly less than {duration} seconds (including both script and break length). Keep in mind that every word takes about 0.5 seconds.
+            - Break lengths between short paragraphs should range from 0 seconds to 120 seconds, depending on the  meditation and script. 
+            - Longer breaks with longer paragraphs are preferred over short breaks and many verses.
+            - Only use the new line character as a delimiter between verses and breaks.
+            - Each verse of the meditation should be on a new line. The break length in seconds will be on the next line within square brackets. For example, a 5 second break would look like: [5]
+            - The only meditation technique that can be used in the script is the {data.get('technique')} technique. Body scanning is acceptable as an introduction to the meditation.
+            - Avoiding overly complex imagery.
+
+            Example Format:
+            Multiple sentences as an introduction. Allow them to settle into their space and mind. Begin by gently asking them to shut their eyes and take deep breaths.
+            [10]
+            Begin guiding them through the {data.get('technique')} meditation technique. Make the instructoins clear and concise.
+            [40]
+            Continue with meditation technique. Let them know that thoughts will arise and help them come back to the meditation. Continue to bring them deeper into meditation.
+            [30]
+            Conclusion of the meditation. Help being them back to the present and relax their mind after the meditation. Remind them to bring this state with them through their day.
+
+            
+            The script should strictly follow the {data.get('technique')} meditation technique, adhering to the format and guidelines.
+
+          """)
         return prompt          
     
     def emotion_1(self, data, num_lines):
@@ -242,7 +262,6 @@ class GenerateMeditationView(APIView):
             Structure:
             - Start with a comforting introduction that acknowledges the emotion of {data.get("emotion")}, setting a tone of acceptance and understanding. This section should ease them into the meditation and explore solutions to issues with this state.
             - Follow with sentences that guide the listener through a meditation technique suitable for the emotion. Techniques can include breath awareness, noting, resting awareness, body scanning, visualization, reflection, loving-kindness, chakra, mantra, focused attention, skillful compassion, or any other appropriate method geared toward the emotion.
-            - Each short paragraph should begin on a new line, followed by a note indicating the break length in seconds on the next line.
             - Progressively deepen the meditation, providing clear and concise instructions.
             - Conclude with a sentence or two offering closure, reassurance, or a positive affirmation. This section should help transition the listener back to their surroundings, carrying the tranquility or insight from the meditation into their day.
 
@@ -257,7 +276,7 @@ class GenerateMeditationView(APIView):
 
             Example Format:
             Multiple sentences as an introduction. Recognize the emotion and allow them to settle into their space and mind. Begin by shutting eyes and taking deep breaths.
-            [25]
+            [15]
             Guiding them through the meditation technique. Use a specific meditation technique specifc to their emotion or situation.
             [40]
             Continue with meditation technique. Let them know that thoughts will arise and help them come back to the meditation. Continue to bring them deeper into meditation.
